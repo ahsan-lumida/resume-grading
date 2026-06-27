@@ -18,7 +18,7 @@ export default function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
         {crumbs.map((c, i) => {
           const isLast = i === crumbs.length - 1;
           return (
-            <li key={c.path} className="flex items-center gap-1.5">
+            <li key={c.name} className="flex items-center gap-1.5">
               {isLast ? (
                 <span className="text-secondary">{c.name}</span>
               ) : (

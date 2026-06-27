@@ -49,8 +49,8 @@ const STEPS = [
 ];
 
 const DOS = [
-  "Single-column, standard headings (Experience, Skills, Education)",
-  "Text-based PDF or DOCX, selectable text",
+  "Single-column layout with standard headings (Experience, Skills, Education)",
+  "Text-based PDF or DOCX with selectable text",
   "Keywords from the job description, used naturally",
   "Quantified, results-focused bullet points",
   "Consistent dates and a professional email",
@@ -66,7 +66,7 @@ const DONTS = [
 
 export default function AtsResumeGuide() {
   return (
-    <main className="mx-auto w-full max-w-[1100px] px-5">
+    <main className="mx-auto w-full max-w-[1100px] px-5 text-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -83,14 +83,14 @@ export default function AtsResumeGuide() {
       <Breadcrumbs
         crumbs={[
           { name: "Home", path: "/" },
-          { name: "Guides", path: "/guides/ats-resume" },
-          { name: "ATS Resume", path: PATH },
+          { name: "ATS Resume Guide", path: PATH },
         ]}
       />
 
-      <article className="py-12 sm:py-16">
+      <article className="py-12 text-secondary sm:py-16">
+        {/* Header */}
         <header className="max-w-3xl">
-          <h1 className="text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
+          <h1 className="text-balance text-4xl font-bold leading-[1.1] tracking-tight text-primary sm:text-5xl">
             How to Write an <span className="text-gradient">ATS Resume</span>
           </h1>
           <p className="mt-5 text-base leading-relaxed text-secondary sm:text-lg">
@@ -100,70 +100,76 @@ export default function AtsResumeGuide() {
           </p>
         </header>
 
-        <div className="mt-12 max-w-3xl space-y-6 text-sm leading-relaxed text-secondary sm:text-base">
-          <section>
-            <h2 className="text-2xl font-bold tracking-tight text-primary">
-              What is an ATS resume?
-            </h2>
-            <p className="mt-3">
-              An ATS resume is one formatted so an applicant tracking system — software like{" "}
-              {ATS_PLATFORMS.join(", ")} — can cleanly extract your information and match it to a job.
-              It isn&apos;t a special template; it&apos;s a set of formatting and content choices that
-              keep your resume readable by machines without sacrificing readability for humans.
-            </p>
-          </section>
+        {/* What is an ATS resume */}
+        <section className="mt-12 max-w-3xl">
+          <h2 className="text-2xl font-bold tracking-tight text-primary">
+            What is an ATS resume?
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-secondary sm:text-base">
+            An ATS resume is one formatted so an applicant tracking system — software like{" "}
+            {ATS_PLATFORMS.join(", ")} — can cleanly extract your information and match it to a job.
+            It isn&apos;t a special template; it&apos;s a set of formatting and content choices that
+            keep your resume readable by machines without sacrificing readability for humans.
+          </p>
+        </section>
 
-          <section>
-            <h2 className="text-2xl font-bold tracking-tight text-primary">
-              5 steps to an ATS-friendly resume
-            </h2>
-            <ol className="mt-4 space-y-4">
-              {STEPS.map((step, i) => (
-                <li key={step.name} className="flex gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-sm font-semibold text-accent ring-1 ring-accent/20">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-semibold text-primary">{step.name}</h3>
-                    <p className="mt-1">{step.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-        </div>
+        {/* 5 Steps */}
+        <section className="mt-12 max-w-3xl">
+          <h2 className="text-2xl font-bold tracking-tight text-primary">
+            5 steps to an ATS-friendly resume
+          </h2>
+          <ol className="mt-6 space-y-5">
+            {STEPS.map((step, i) => (
+              <li key={step.name} className="flex gap-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-sm font-semibold text-accent ring-1 ring-accent/20">
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 className="font-semibold text-primary">{step.name}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-secondary">{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
 
         {/* Do / Don't */}
-        <section className="mt-12 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-2">
-          <div className="rounded-2xl border border-green-500/20 bg-green-500/5 p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-green-400">Do</h2>
-            <ul className="mt-4 space-y-2.5">
-              {DOS.map((d) => (
-                <li key={d} className="flex gap-2.5 text-sm leading-relaxed text-secondary">
-                  <Check size={16} className="mt-0.5 shrink-0 text-green-400" />
-                  {d}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-red-400">Don&apos;t</h2>
-            <ul className="mt-4 space-y-2.5">
-              {DONTS.map((d) => (
-                <li key={d} className="flex gap-2.5 text-sm leading-relaxed text-secondary">
-                  <X size={16} className="mt-0.5 shrink-0 text-red-400" />
-                  {d}
-                </li>
-              ))}
-            </ul>
+        <section className="mt-12 max-w-3xl">
+          <h2 className="text-2xl font-bold tracking-tight text-primary">
+            ATS resume do&apos;s and don&apos;ts
+          </h2>
+          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="rounded-2xl border border-green-500/20 bg-green-500/5 p-6">
+              <p className="text-sm font-semibold uppercase tracking-wider text-green-400">Do</p>
+              <ul className="mt-4 space-y-2.5">
+                {DOS.map((d) => (
+                  <li key={d} className="flex gap-2.5 text-sm leading-relaxed text-secondary">
+                    <Check size={16} className="mt-0.5 shrink-0 text-green-400" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
+              <p className="text-sm font-semibold uppercase tracking-wider text-red-400">Don&apos;t</p>
+              <ul className="mt-4 space-y-2.5">
+                {DONTS.map((d) => (
+                  <li key={d} className="flex gap-2.5 text-sm leading-relaxed text-secondary">
+                    <X size={16} className="mt-0.5 shrink-0 text-red-400" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
-        <section className="mt-12 max-w-3xl text-sm leading-relaxed text-secondary sm:text-base">
+        {/* Check before you apply */}
+        <section className="mt-12 max-w-3xl">
           <h2 className="text-2xl font-bold tracking-tight text-primary">
             Check your resume before you apply
           </h2>
-          <p className="mt-3">
+          <p className="mt-3 text-sm leading-relaxed text-secondary sm:text-base">
             The fastest way to know whether your resume is ATS-ready is to test it. Run it through
             the{" "}
             <Link href="/ats-resume-checker" className="text-accent hover:underline">

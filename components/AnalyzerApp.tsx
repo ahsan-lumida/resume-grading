@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertCircle, RotateCcw, ShieldCheck } from "lucide-react";
 import { submitAnalysis } from "@/lib/client";
 import { ApiError, type ApiState, type ResumeAnalysis } from "@/types/analysis";
@@ -113,6 +113,12 @@ export default function AnalyzerApp() {
   const [state, setState] = useState<ApiState>("idle");
   const [analysis, setAnalysis] = useState<ResumeAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Warm up the Render backend the moment this component mounts so it's
+  // ready by the time the user finishes uploading their file.
+  useEffect(() => {
+    fetch("/api/warmup").catch(() => undefined);
+  }, []);
 
   async function handleSubmit(file: File, jobDescription?: string) {
     setState("loading");

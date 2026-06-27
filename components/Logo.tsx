@@ -1,6 +1,3 @@
-// Hone brand mark + wordmark. The mark is an upward "honed edge" chevron —
-// precision + ascent — in the indigo→violet brand gradient.
-
 export function LogoMark({ size = 30 }: { size?: number }) {
   return (
     <svg
@@ -12,12 +9,12 @@ export function LogoMark({ size = 30 }: { size?: number }) {
       className="shrink-0"
     >
       <defs>
-        <linearGradient id="hone-mark" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+        <linearGradient id="rg-mark" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
           <stop stopColor="#4F6EF7" />
           <stop offset="1" stopColor="#8B5CF6" />
         </linearGradient>
       </defs>
-      <rect width="32" height="32" rx="9" fill="url(#hone-mark)" />
+      <rect width="32" height="32" rx="9" fill="url(#rg-mark)" />
       <path
         d="M9 19.5 L16 10.5 L23 19.5"
         stroke="white"
@@ -40,7 +37,7 @@ export default function Logo({
   return (
     <span className={`flex items-center gap-2.5 ${className}`}>
       <LogoMark size={size} />
-      <span className="text-lg font-semibold tracking-tight text-primary">Hone</span>
+      <span className="text-lg font-semibold tracking-tight text-primary">ResumeGrade</span>
     </span>
   );
 }

@@ -8,7 +8,7 @@ import Cta from "@/components/sections/Cta";
 import { ATS_PLATFORMS, FAQ_HOME } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free ATS Resume Checker — Pass the ATS | Hone" },
+  title: { absolute: "Free ATS Resume Checker — Pass the ATS | ResumeGrade" },
   description:
     "Check whether your resume passes applicant tracking systems like Workday, Greenhouse, and Lever. Get your ATS score, missing keywords, and parsing fixes instantly. Free, no signup.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 const ATS_FAQ = FAQ_HOME.filter((f) =>
-  ["How does an ATS read my resume?", "How do I make my resume ATS-friendly?", "Which ATS platforms does Hone check against?", "How is the ATS score calculated?"].includes(
+  ["How does an ATS read my resume?", "How do I make my resume ATS-friendly?", "Which ATS platforms does ResumeGrade check against?", "How is the ATS score calculated?"].includes(
     f.q,
   ),
 );
@@ -72,7 +72,7 @@ export default function AtsResumeChecker() {
             break parsing — so strong candidates get filtered out for formatting reasons alone.
           </p>
           <p>
-            Hone evaluates your resume using signals researched across major ATS platforms including{" "}
+            ResumeGrade evaluates your resume using signals researched across major ATS platforms including{" "}
             {ATS_PLATFORMS.join(", ")}. If our checker can read and understand your resume, company
             systems generally can too — and you&apos;ll see the specific keywords and structure
             changes that move your ATS score up.

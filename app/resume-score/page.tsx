@@ -8,7 +8,7 @@ import Cta from "@/components/sections/Cta";
 import { FAQ_HOME } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Resume Score Checker — Score My Resume | Hone" },
+  title: { absolute: "Free Resume Score Checker — Score My Resume | ResumeGrade" },
   description:
     "Score my resume: get an instant 0–10 resume score with AI feedback on content, impact, ATS keywords, and structure — plus the exact fixes to raise it. Free, private, no signup.",
   keywords: [
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
 const SCORE_FAQ = FAQ_HOME.filter((f) =>
   [
     "What is a good resume score?",
-    "What is a resume checker and how does Hone work?",
+    "What is a resume checker and how does ResumeGrade work?",
     "How is the ATS score calculated?",
-    "Is Hone really free?",
+    "Is ResumeGrade really free?",
   ].includes(f.q),
 );
 
@@ -69,7 +69,7 @@ export default function ResumeScore() {
         </h2>
         <div className="mt-6 max-w-3xl space-y-4 text-sm leading-relaxed text-secondary sm:text-base">
           <p>
-            On Hone&apos;s 0–10 scale, <strong className="text-primary">8 or above</strong> is strong
+            On ResumeGrade&apos;s 0–10 scale, <strong className="text-primary">8 or above</strong> is strong
             and competitive, <strong className="text-primary">5–7</strong> means a solid resume with
             clear room to improve, and <strong className="text-primary">below 5</strong> signals
             issues a recruiter or ATS would likely catch. Your score comes with a plain-English

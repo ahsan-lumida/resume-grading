@@ -18,7 +18,7 @@ export const HOW_IT_WORKS: HowStep[] = [
   },
   {
     title: "AI reviews it like a recruiter and an ATS",
-    body: "Hone parses your resume the way applicant tracking systems such as Workday, Greenhouse, and Lever do, then scores content, impact, and structure against what hiring managers look for.",
+    body: "ResumeGrade parses your resume the way applicant tracking systems such as Workday, Greenhouse, and Lever do, then scores content, impact, and structure against what hiring managers look for.",
   },
   {
     title: "Get your score and exact fixes",
@@ -92,24 +92,24 @@ export const CHECKS: CheckCategory[] = [
 // Homepage FAQ — expanded to target People-Also-Ask queries.
 export const FAQ_HOME: QA[] = [
   {
-    q: "What is a resume checker and how does Hone work?",
-    a: "A resume checker analyzes your resume the way an applicant tracking system (ATS) and a recruiter would, then scores it and suggests fixes. Hone parses your uploaded resume, checks it against ATS signals and hiring-manager criteria, and returns an overall score, ATS score, missing keywords, bullet rewrites, red flags, and ranked improvements — in about 60 seconds.",
+    q: "What is a resume checker and how does ResumeGrade work?",
+    a: "A resume checker analyzes your resume the way an applicant tracking system (ATS) and a recruiter would, then scores it and suggests fixes. ResumeGrade parses your uploaded resume, checks it against ATS signals and hiring-manager criteria, and returns an overall score, ATS score, missing keywords, bullet rewrites, red flags, and ranked improvements — in about 60 seconds.",
   },
   {
     q: "What is a good resume score?",
-    a: "On Hone's 0–10 scale, 8+ is strong and competitive, 5–7 means solid with clear room to improve, and below 5 signals issues a recruiter or ATS would likely catch. The score rationale and ranked improvements tell you exactly what to fix to move up.",
+    a: "On ResumeGrade's 0–10 scale, 8+ is strong and competitive, 5–7 means solid with clear room to improve, and below 5 signals issues a recruiter or ATS would likely catch. The score rationale and ranked improvements tell you exactly what to fix to move up.",
   },
   {
     q: "How does an ATS read my resume?",
-    a: "An applicant tracking system extracts text from your file and maps it into fields — contact info, experience, skills, education — then makes it searchable by keyword for recruiters. If your formatting blocks clean parsing or you're missing role keywords, you can be filtered out before a human ever sees it. Hone shows you how parseable your resume is and which keywords you're missing.",
+    a: "An applicant tracking system extracts text from your file and maps it into fields — contact info, experience, skills, education — then makes it searchable by keyword for recruiters. If your formatting blocks clean parsing or you're missing role keywords, you can be filtered out before a human ever sees it. ResumeGrade shows you how parseable your resume is and which keywords you're missing.",
   },
   {
     q: "How do I make my resume ATS-friendly?",
-    a: "Use a clean single-column layout, standard section headings, a text-based PDF or DOCX, and the exact keywords from the job description. Avoid tables, text boxes, and images for critical content. Hone flags ATS parsing problems and the specific keywords to add.",
+    a: "Use a clean single-column layout, standard section headings, a text-based PDF or DOCX, and the exact keywords from the job description. Avoid tables, text boxes, and images for critical content. ResumeGrade flags ATS parsing problems and the specific keywords to add.",
   },
   {
-    q: "Which ATS platforms does Hone check against?",
-    a: `Hone evaluates your resume using signals researched across major applicant tracking systems including ${ATS_PLATFORMS.join(", ")}. If our checker can read and understand your resume, company ATSes generally can too.`,
+    q: "Which ATS platforms does ResumeGrade check against?",
+    a: `ResumeGrade evaluates your resume using signals researched across major applicant tracking systems including ${ATS_PLATFORMS.join(", ")}. If our checker can read and understand your resume, company ATSes generally can too.`,
   },
   {
     q: "Is my resume data private?",
@@ -117,7 +117,7 @@ export const FAQ_HOME: QA[] = [
   },
   {
     q: "What file formats are supported?",
-    a: "Hone accepts text-based PDF and DOCX files up to 5 MB. Scanned image-only PDFs can't be read — export a text-based version instead.",
+    a: "ResumeGrade accepts text-based PDF and DOCX files up to 5 MB. Scanned image-only PDFs can't be read — export a text-based version instead.",
   },
   {
     q: "How is the ATS score calculated?",
@@ -128,8 +128,8 @@ export const FAQ_HOME: QA[] = [
     a: "They're directional estimates, not guarantees. The model weighs your experience, achievements, and how your resume compares to others at each company tier (FAANG, startup, SMB) to give you a realistic sense of where you stand.",
   },
   {
-    q: "Is Hone really free?",
-    a: "Yes — Hone's resume review is completely free, with no signup, paywall, or credit card required.",
+    q: "Is ResumeGrade really free?",
+    a: "Yes — ResumeGrade's resume review is completely free, with no signup, paywall, or credit card required.",
   },
 ];
 

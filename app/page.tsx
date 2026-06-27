@@ -32,7 +32,7 @@ const TRUST = [
 ];
 
 const howToJsonLd = howToLd(
-  "How to check your resume with Hone",
+  "How to check your resume with ResumeGrade",
   HOW_IT_WORKS.map((s) => ({ name: s.title, text: s.body })),
 );
 

@@ -24,7 +24,7 @@ export default function Navbar() {
       }`}
     >
       <nav className="mx-auto flex h-16 w-full max-w-[1100px] items-center justify-between px-5">
-        <Link href="/" className="transition-opacity hover:opacity-80" aria-label="Hone home">
+        <Link href="/" className="transition-opacity hover:opacity-80" aria-label="ResumeGrade home">
           <Logo />
         </Link>
         <Link

@@ -2,11 +2,11 @@
 // SITE_URL is env-driven so the production domain can change without code edits.
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://hone.app"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://resumegrade.vercel.app"
 ).replace(/\/$/, "");
 
-export const SITE_NAME = "Hone";
-export const SITE_TAGLINE = "Sharpen your resume. Land the interview.";
+export const SITE_NAME = "ResumeGrade";
+export const SITE_TAGLINE = "Grade your resume. Land the interview.";
 
 /** Build an absolute URL for a given path. */
 export function absoluteUrl(path = "/"): string {

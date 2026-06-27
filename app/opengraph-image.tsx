@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 // up as og:image and twitter:image automatically.
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Hone — Free AI Resume Reviewer";
+export const alt = "ResumeGrade — Free AI Resume Reviewer";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -35,10 +35,10 @@ export default function OpengraphImage() {
               color: "#fff",
             }}
           >
-            H
+            RG
           </div>
           <div style={{ fontSize: 34, fontWeight: 700, color: "#EEF2FF", letterSpacing: -1 }}>
-            Hone
+            ResumeGrade
           </div>
         </div>
         <div
@@ -53,7 +53,7 @@ export default function OpengraphImage() {
             flexDirection: "column",
           }}
         >
-          <span>Sharpen your resume.</span>
+          <span>Grade your resume.</span>
           <span style={{ color: "#7C8FF8" }}>Land the interview.</span>
         </div>
         <div

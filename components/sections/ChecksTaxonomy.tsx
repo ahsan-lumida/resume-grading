@@ -10,7 +10,7 @@ export default function ChecksTaxonomy() {
         {total} checks across {CHECKS.length} categories
       </h2>
       <p className="mt-4 max-w-2xl text-balance leading-relaxed text-secondary">
-        Hone goes well beyond spelling and formatting — it grades the things recruiters and
+        ResumeGrade goes well beyond spelling and formatting — it grades the things recruiters and
         applicant tracking systems actually weigh, then tells you how to fix each one.
       </p>
 

@@ -45,15 +45,18 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: "ResumeGrade",
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "ResumeGrade — Free AI Resume Checker & ATS Score Analyzer",
     description: "Score your resume, fix ATS keywords, rewrite bullets, and see interview odds.",
   },
+  // Enables rich link previews on iMessage, WhatsApp, Discord, Slack, LinkedIn
+  appleWebApp: { title: "ResumeGrade", statusBarStyle: "black-translucent" },
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
-  verification: { google: "a438768b06f22053" },
+  verification: { google: "cW5TfngOwkZQ2A6KbfA67HpYX5JvJeHQ6bZLpXV98EI" },
 };
 
 export default function RootLayout({

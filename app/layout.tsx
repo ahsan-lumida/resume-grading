@@ -53,6 +53,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
+  verification: { google: "a438768b06f22053" },
 };
 
 export default function RootLayout({

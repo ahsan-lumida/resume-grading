@@ -1,9 +1,7 @@
 // Centralized SEO config + JSON-LD builders.
 // SITE_URL is env-driven so the production domain can change without code edits.
 
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://resumegrade.vercel.app"
-).replace(/\/$/, "");
+export const SITE_URL = "https://ai-resume-grade.vercel.app";
 
 export const SITE_NAME = "ResumeGrade";
 export const SITE_TAGLINE = "Grade your resume. Land the interview.";

@@ -1,3 +1,5 @@
+// Fixed brand colors (not theme-adaptive): electric-violet tile, light "R",
+// and a small cyan "grade" dot — matches the Aurora Glass accent system.
 export function LogoMark({ size = 30 }: { size?: number }) {
   return (
     <svg
@@ -8,21 +10,15 @@ export function LogoMark({ size = 30 }: { size?: number }) {
       aria-hidden="true"
       className="shrink-0"
     >
-      <defs>
-        <linearGradient id="rg-mark" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#4F6EF7" />
-          <stop offset="1" stopColor="#8B5CF6" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="9" fill="url(#rg-mark)" />
+      <rect width="32" height="32" rx="8" fill="#8B5CF6" />
       <path
-        d="M9 19.5 L16 10.5 L23 19.5"
-        stroke="white"
-        strokeWidth="2.6"
+        d="M10 21V11.5h5.2c2 0 3.4 1.2 3.4 3s-1.4 3-3.4 3H12"
+        stroke="#F4F5F9"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M12 23 L20 23" stroke="white" strokeOpacity="0.7" strokeWidth="2.6" strokeLinecap="round" />
+      <circle cx="22.5" cy="21.5" r="2.3" fill="#22D3EE" />
     </svg>
   );
 }
@@ -37,7 +33,7 @@ export default function Logo({
   return (
     <span className={`flex items-center gap-2.5 ${className}`}>
       <LogoMark size={size} />
-      <span className="text-lg font-semibold tracking-tight text-primary">ResumeGrade</span>
+      <span className="font-display text-lg font-semibold tracking-tight text-primary">ResumeGrade</span>
     </span>
   );
 }

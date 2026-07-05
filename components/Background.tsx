@@ -1,15 +1,18 @@
-// Ambient page background: slow-drifting aurora blobs + a masked dot grid.
-// CSS-only and GPU-friendly (transform/opacity), fixed behind all content.
+// Ambient page background: near-black base with three large, blurred
+// aurora blobs (violet / cyan / amber) drifting on slow 26–34s loops,
+// plus a faint dot grid for texture. Purely decorative — colors here
+// never carry meaning. Blob motion is CSS-only and is switched off
+// under prefers-reduced-motion (they remain as static glows).
 
 export default function Background() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-base"
     >
-      <div className="absolute -top-48 left-1/2 h-[620px] w-[920px] -translate-x-1/2 rounded-full bg-accent/20 blur-[150px] animate-aurora-1" />
-      <div className="absolute top-1/4 -right-48 h-[520px] w-[520px] rounded-full bg-violet-500/15 blur-[140px] animate-aurora-2" />
-      <div className="absolute bottom-0 -left-32 h-[440px] w-[560px] rounded-full bg-cyan-500/10 blur-[140px] animate-aurora-3" />
+      <div className="aurora-blob aurora-1" />
+      <div className="aurora-blob aurora-2" />
+      <div className="aurora-blob aurora-3" />
       <div className="bg-grid absolute inset-0" />
     </div>
   );

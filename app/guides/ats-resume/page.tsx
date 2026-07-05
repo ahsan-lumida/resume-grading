@@ -90,8 +90,8 @@ export default function AtsResumeGuide() {
       <article className="py-12 text-secondary sm:py-16">
         {/* Header */}
         <header className="max-w-3xl">
-          <h1 className="text-balance text-4xl font-bold leading-[1.1] tracking-tight text-primary sm:text-5xl">
-            How to Write an <span className="text-gradient">ATS Resume</span>
+          <h1 className="text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-primary sm:text-5xl">
+            How to Write an ATS Resume
           </h1>
           <p className="mt-5 text-base leading-relaxed text-secondary sm:text-lg">
             Roughly three out of four resumes are screened by software before a person reads them.
@@ -139,23 +139,23 @@ export default function AtsResumeGuide() {
             ATS resume do&apos;s and don&apos;ts
           </h2>
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <div className="rounded-2xl border border-green-500/20 bg-green-500/5 p-6">
-              <p className="text-sm font-semibold uppercase tracking-wider text-green-400">Do</p>
+            <div className="rounded-2xl border border-green/20 bg-green/5 p-6">
+              <p className="text-sm font-semibold uppercase tracking-wider text-green">Do</p>
               <ul className="mt-4 space-y-2.5">
                 {DOS.map((d) => (
                   <li key={d} className="flex gap-2.5 text-sm leading-relaxed text-secondary">
-                    <Check size={16} className="mt-0.5 shrink-0 text-green-400" />
+                    <Check size={16} className="mt-0.5 shrink-0 text-green" aria-hidden="true" />
                     {d}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-6">
-              <p className="text-sm font-semibold uppercase tracking-wider text-red-400">Don&apos;t</p>
+            <div className="rounded-2xl border border-red/20 bg-red/5 p-6">
+              <p className="text-sm font-semibold uppercase tracking-wider text-red">Don&apos;t</p>
               <ul className="mt-4 space-y-2.5">
                 {DONTS.map((d) => (
                   <li key={d} className="flex gap-2.5 text-sm leading-relaxed text-secondary">
-                    <X size={16} className="mt-0.5 shrink-0 text-red-400" />
+                    <X size={16} className="mt-0.5 shrink-0 text-red" aria-hidden="true" />
                     {d}
                   </li>
                 ))}

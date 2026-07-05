@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useScroll, useMotionValueEvent } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Logo from "@/components/Logo";
 
@@ -12,23 +13,21 @@ const NAV_LINKS = [
   { href: "/guides/ats-resume", label: "Guide" },
 ];
 
+// Transparent over the hero; solidifies into frosted glass once the
+// page scrolls (driven by framer-motion's useScroll).
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 16));
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
+      className={`sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
         scrolled
-          ? "border-b border-border bg-base/70 backdrop-blur-xl"
-          : "border-b border-transparent"
+          ? "border-white/10 bg-white/[0.04] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl backdrop-saturate-150"
+          : "border-transparent bg-transparent"
       }`}
     >
       <nav className="mx-auto flex h-16 w-full max-w-[1100px] items-center justify-between px-5">
@@ -43,7 +42,7 @@ export default function Navbar() {
                 href={link.href}
                 className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? "bg-accent/10 text-accent"
+                    ? "bg-accent/15 text-accent"
                     : "text-secondary hover:bg-elevated hover:text-primary"
                 }`}
               >
@@ -54,7 +53,7 @@ export default function Navbar() {
         </div>
         <Link
           href="/#upload"
-          className="group flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_30px_-12px_rgba(79,110,247,0.8)] transition-opacity hover:opacity-90"
+          className="group glow-accent flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-dim focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base"
         >
           Analyze resume
           <ArrowUpRight

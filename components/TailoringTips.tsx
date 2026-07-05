@@ -9,7 +9,7 @@ export default function TailoringTips({
   if (!tips || tips.length === 0) return null;
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6">
+    <section className="rounded-2xl border border-border glass p-6">
       <h2 className="text-xs font-medium uppercase tracking-wider text-secondary">
         Tailoring Tips
       </h2>

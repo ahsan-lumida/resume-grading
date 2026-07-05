@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ResumeAnalysis } from "@/types/analysis";
 import { pctHex } from "@/lib/ui";
 
@@ -9,17 +9,12 @@ export default function InterviewOdds({
 }: {
   tiers: ResumeAnalysis["interview_probability_by_tier"];
 }) {
-  // Animate bars from 0 → probability on mount.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
+  const reduceMotion = useReducedMotion();
 
   if (!tiers || tiers.length === 0) return null;
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6">
+    <section className="glass rounded-2xl border border-border p-6">
       <h2 className="mb-5 text-xs font-medium uppercase tracking-wider text-secondary">
         Interview Odds by Company Tier
       </h2>
@@ -31,14 +26,18 @@ export default function InterviewOdds({
             <div key={i}>
               <div className="flex items-baseline justify-between">
                 <span className="text-sm font-medium text-primary">{t.tier}</span>
-                <span className="text-sm font-bold" style={{ color }}>
+                <span className="text-sm font-bold tabular-nums" style={{ color }}>
                   {Math.round(pct)}%
                 </span>
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-border">
-                <div
-                  className="h-full rounded-full transition-[width] duration-700 ease-out"
-                  style={{ width: mounted ? `${pct}%` : "0%", backgroundColor: color }}
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ backgroundColor: color }}
+                  initial={{ width: reduceMotion ? `${pct}%` : "0%" }}
+                  whileInView={{ width: `${pct}%` }}
+                  viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+                  transition={{ duration: 0.9, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
                 />
               </div>
               {t.rationale && (

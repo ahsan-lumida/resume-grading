@@ -50,8 +50,8 @@ export default function ResumeScore() {
       />
 
       <section className="py-12 sm:py-16">
-        <h1 className="text-balance text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
-          Free <span className="text-gradient">Resume Score</span> Checker
+        <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
+          Free Resume Score Checker
         </h1>
         <p className="mt-5 max-w-2xl text-balance text-base leading-relaxed text-secondary sm:text-lg">
           Score my resume — instantly. Upload your resume to get an honest 0–10 score with a clear
@@ -80,7 +80,7 @@ export default function ResumeScore() {
 
         <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {AXES.map((axis) => (
-            <li key={axis.label} className="rounded-2xl border border-border bg-card/70 p-5 backdrop-blur">
+            <li key={axis.label} className="rounded-2xl border border-border bg-card p-5 shadow-paper-sm">
               <h3 className="text-sm font-semibold tracking-tight text-primary">{axis.label}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-secondary">{axis.body}</p>
             </li>

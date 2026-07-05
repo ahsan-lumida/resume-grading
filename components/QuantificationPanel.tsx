@@ -24,7 +24,7 @@ export default function QuantificationPanel({
           return (
             <div
               key={i}
-              className="overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-150 hover:border-border-bright"
+              className="overflow-hidden rounded-2xl border border-border glass transition-colors duration-150 hover:border-border-bright"
             >
               <button
                 onClick={() => setOpen(isOpen ? null : i)}

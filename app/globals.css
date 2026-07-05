@@ -1,27 +1,49 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────
-   Design tokens — single source of truth.
-   Raw values live here; @theme maps them to Tailwind utilities.
+   Design tokens — single source of truth. See design-system/MASTER.md
+   ("Aurora Glass") for the full rationale.
+
+   Dark-only theme: near-black base, frosted glass surfaces, one
+   saturated accent (electric violet) reserved for score numbers,
+   primary CTAs, and progress rings. Aurora blobs (violet/cyan/amber)
+   are ambient background only — never used for foreground meaning.
+
+   Contrast is computed against the worst case (glass surface over an
+   aurora blob), not just the raw base color:
+   - text-primary   #F4F5F9  ~16:1
+   - text-secondary #A9AEC0  ~7.5:1
+   - text-tertiary  #7D8296  ~4.8:1 (captions only)
+   - accent         #A78BFA  ~6.8:1
    ────────────────────────────────────────────────────────────── */
 :root {
-  --bg-base: #080b11; /* near-black, not pure black */
-  --bg-card: #0f1420; /* card surface */
-  --bg-elevated: #161d2e; /* hover / elevated state */
-  --border: #1e2a3d; /* subtle borders */
-  --border-bright: #2d3f5c; /* active/focus borders */
-  --text-primary: #eef2ff; /* almost white, slight blue tint */
-  --text-secondary: #8b9cc8; /* muted labels */
-  --text-tertiary: #4a5880; /* disabled / placeholder */
-  --accent: #4f6ef7; /* indigo-blue, primary CTA */
-  --accent-2: #8b5cf6; /* violet, gradient partner */
-  --accent-glow: rgba(79, 110, 247, 0.15);
-  --green: #22c55e;
-  --amber: #f59e0b;
-  --red: #ef4444;
-  --score-high: #22c55e;
-  --score-mid: #f59e0b;
-  --score-low: #ef4444;
+  --bg-base: #0a0a0f; /* near-black page background */
+  --bg-card: rgba(255, 255, 255, 0.04); /* frosted panel fill */
+  --bg-elevated: rgba(255, 255, 255, 0.07); /* hover / subtle-fill state */
+  --bg-solid: #14141b; /* opaque surface (badge cores, dropdowns) */
+  --border: rgba(255, 255, 255, 0.1); /* glass hairline */
+  --border-bright: rgba(255, 255, 255, 0.2); /* hover / active border */
+  --text-primary: #f4f5f9;
+  --text-secondary: #a9aec0;
+  --text-tertiary: #7d8296;
+  --accent: #a78bfa; /* electric violet — THE accent; scores, CTAs, rings */
+  --accent-dim: #bda5fe; /* hover state (brighter, keeps on-accent contrast) */
+  --on-accent: #14082b; /* ink on solid accent fills, ~7:1 */
+  --accent-2: #22d3ee; /* cyan — decorative secondary, sparing use */
+  --accent-2-soft: rgba(139, 92, 246, 0.22); /* highlight / track fill */
+  --accent-glow: rgba(139, 92, 246, 0.35);
+  --green: #4ade80; /* success */
+  --amber: #fbbf24; /* warning */
+  --red: #f87171; /* destructive / error */
+  --score-high: #4ade80;
+  --score-mid: #fbbf24;
+  --score-low: #f87171;
+
+  /* Section-tag hues — light enough for ≥4.5:1 as text on glass. */
+  --tag-slate: #94a3b8;
+  --tag-sage: #6ee7b7;
+  --tag-clay: #fdba74;
+  --tag-gold: #fcd34d;
 }
 
 /* Expose tokens as utilities: bg-base, bg-card, text-primary,
@@ -31,6 +53,7 @@
   --color-base: var(--bg-base);
   --color-card: var(--bg-card);
   --color-elevated: var(--bg-elevated);
+  --color-solid: var(--bg-solid);
 
   --color-border: var(--border);
   --color-border-bright: var(--border-bright);
@@ -40,28 +63,35 @@
   --color-tertiary: var(--text-tertiary);
 
   --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-on-accent: var(--on-accent);
   --color-accent-2: var(--accent-2);
+  --color-accent-2-soft: var(--accent-2-soft);
   --color-accent-glow: var(--accent-glow);
 
   --color-green: var(--green);
   --color-amber: var(--amber);
   --color-red: var(--red);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-tag-slate: var(--tag-slate);
+  --color-tag-sage: var(--tag-sage);
+  --color-tag-clay: var(--tag-clay);
+  --color-tag-gold: var(--tag-gold);
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-data);
 
   /* Motion */
-  --animate-fade-slide-up: fade-slide-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-slide-up: fade-slide-up 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-skeleton: skeleton-pulse 1.5s ease-in-out infinite;
-  --animate-aurora-1: aurora-1 24s ease-in-out infinite alternate;
-  --animate-aurora-2: aurora-2 30s ease-in-out infinite alternate;
-  --animate-aurora-3: aurora-3 28s ease-in-out infinite alternate;
+  --animate-grade-fill: grade-fill 500ms ease-out both;
 }
 
 @keyframes fade-slide-up {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -75,33 +105,27 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.45;
+    opacity: 0.5;
   }
 }
 
-@keyframes aurora-1 {
+@property --grade-pct {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes grade-fill {
   from {
-    transform: translate(-50%, 0) scale(1);
+    --grade-pct: 0;
   }
   to {
-    transform: translate(-42%, 30px) scale(1.15);
+    --grade-pct: var(--score, 0);
   }
 }
-@keyframes aurora-2 {
-  from {
-    transform: translate(0, 0) scale(1);
-  }
-  to {
-    transform: translate(-40px, 40px) scale(1.2);
-  }
-}
-@keyframes aurora-3 {
-  from {
-    transform: translate(0, 0) scale(1);
-  }
-  to {
-    transform: translate(50px, -30px) scale(1.1);
-  }
+
+html {
+  color-scheme: dark;
 }
 
 body {
@@ -110,69 +134,171 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+p {
   color: var(--text-primary);
 }
 
-/* ── Effects / utilities ──────────────────────────────────────── */
+/* ── Glass surfaces ───────────────────────────────────────────── */
 
-/* Dot grid that fades out from the top — sits over the aurora blobs. */
+/* Frosted panel: blur + 4% white fill + a 1px top inner highlight that
+   sells the "lit glass edge". Registered as @utility (not plain CSS) so
+   Tailwind variants like hover:bg-elevated can still override it. Borders
+   are NOT set here — markup adds `border border-border` alongside. */
+@utility glass {
+  background: var(--bg-card);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+/* Heavier variant for nav / modals sitting directly over the blobs. */
+@utility glass-strong {
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(32px) saturate(1.4);
+  backdrop-filter: blur(32px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Aurora background blobs ──────────────────────────────────── */
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform;
+  pointer-events: none;
+}
+.aurora-1 {
+  width: 55vw;
+  height: 55vw;
+  min-width: 480px;
+  min-height: 480px;
+  top: -18%;
+  left: -12%;
+  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.42), transparent 70%);
+  animation: aurora-drift-1 26s ease-in-out infinite alternate;
+}
+.aurora-2 {
+  width: 45vw;
+  height: 45vw;
+  min-width: 400px;
+  min-height: 400px;
+  top: 8%;
+  right: -15%;
+  background: radial-gradient(closest-side, rgba(34, 211, 238, 0.28), transparent 70%);
+  animation: aurora-drift-2 30s ease-in-out infinite alternate;
+}
+.aurora-3 {
+  width: 38vw;
+  height: 38vw;
+  min-width: 340px;
+  min-height: 340px;
+  bottom: -22%;
+  left: 12%;
+  background: radial-gradient(closest-side, rgba(251, 191, 36, 0.16), transparent 70%);
+  animation: aurora-drift-3 34s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift-1 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(12vw, 8vh, 0) scale(1.18);
+  }
+}
+@keyframes aurora-drift-2 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(-10vw, 14vh, 0) scale(0.92);
+  }
+}
+@keyframes aurora-drift-3 {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+  to {
+    transform: translate3d(9vw, -10vh, 0) scale(1.15);
+  }
+}
+
+/* Faint dot grid over the blobs for texture. */
 .bg-grid {
-  background-image: radial-gradient(rgba(139, 156, 200, 0.06) 1px, transparent 1px);
-  background-size: 30px 30px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
   -webkit-mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 10%, transparent 75%);
   mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 10%, transparent 75%);
 }
 
-/* Brand gradient text. */
-.text-gradient {
-  background-image: linear-gradient(110deg, var(--text-primary) 35%, var(--accent) 70%, var(--accent-2) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+/* ── Components / effects ─────────────────────────────────────── */
 
-/* Glow helpers. */
-.glow-accent {
-  box-shadow:
-    0 0 0 1px rgba(79, 110, 247, 0.25),
-    0 12px 40px -12px rgba(79, 110, 247, 0.55);
-}
-.glow-soft {
-  box-shadow: 0 20px 60px -24px rgba(8, 11, 17, 0.9);
-}
-
-/* Hairline gradient border for premium cards (uses mask compositing). */
-.ring-gradient {
+/* Grade badge — circular score indicator (replaced by the animated
+   SVG ring in Phase 5; kept working in the interim). */
+.grade-badge {
+  --grade-pct: var(--score, 0);
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  background: conic-gradient(var(--color-accent) calc(var(--grade-pct) * 1%), var(--color-accent-2-soft) 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  flex-shrink: 0;
+  animation: var(--animate-grade-fill);
 }
-.ring-gradient::before {
+.grade-badge::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(140deg, rgba(79, 110, 247, 0.6), rgba(139, 92, 246, 0.15) 40%, transparent 70%);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  inset: 8px;
+  background: var(--bg-solid);
+  border-radius: 9999px;
+}
+.grade-badge span {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* Elevation scale (legacy names kept — components reference these). */
+.shadow-paper-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.shadow-paper-md {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.shadow-paper-lg {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Accent glow for primary CTAs only. */
+.glow-accent {
+  box-shadow: 0 0 24px var(--accent-glow);
 }
 
 /* Selection + scrollbars. */
 ::selection {
-  background: rgba(79, 110, 247, 0.3);
-  color: #fff;
+  background: rgba(139, 92, 246, 0.4);
+  color: var(--text-primary);
 }
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border-bright) transparent;
 }
-html {
-  scroll-behavior: smooth;
-}
+/* No CSS smooth-scroll: Lenis (components/SmoothScroll.tsx) owns scrolling
+   and handles anchors; the two fight if both are enabled. */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -182,5 +308,8 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  .aurora-blob {
+    animation: none !important;
   }
 }

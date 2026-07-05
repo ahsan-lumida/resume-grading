@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { AlertCircle, RotateCcw, ShieldCheck } from "lucide-react";
 import { submitAnalysis } from "@/lib/client";
-import { ApiError, type ApiState, type ResumeAnalysis } from "@/types/analysis";
+import { ApiError, type ApiState, type ProgressStage, type ResumeAnalysis } from "@/types/analysis";
 import UploadZone from "@/components/UploadZone";
 import ResultsNav, { type NavSection } from "@/components/ResultsNav";
 import { SkeletonCard } from "@/components/Skeleton";
@@ -113,6 +113,7 @@ export default function AnalyzerApp() {
   const [state, setState] = useState<ApiState>("idle");
   const [analysis, setAnalysis] = useState<ResumeAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<{ stage: ProgressStage; pct: number } | null>(null);
 
   // Warm up the Render backend the moment this component mounts so it's
   // ready by the time the user finishes uploading their file.
@@ -123,13 +124,16 @@ export default function AnalyzerApp() {
   async function handleSubmit(file: File, jobDescription?: string) {
     setState("loading");
     setError(null);
+    setProgress({ stage: "parsing", pct: 0 });
     try {
-      const result = await submitAnalysis(file, jobDescription);
+      const result = await submitAnalysis(file, jobDescription, setProgress);
       setAnalysis(result);
       setState("done");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
       setState("error");
+    } finally {
+      setProgress(null);
     }
   }
 
@@ -161,8 +165,8 @@ export default function AnalyzerApp() {
             </div>
             <div className="flex items-center gap-2 text-xs text-tertiary">
               {analysis.redaction_applied && (
-                <span className="flex items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-1 text-green-400">
-                  <ShieldCheck size={13} />
+                <span className="flex items-center gap-1.5 rounded-full border border-green/20 bg-green/10 px-2.5 py-1 text-green">
+                  <ShieldCheck size={13} aria-hidden="true" />
                   Personal info redacted
                 </span>
               )}
@@ -187,9 +191,9 @@ export default function AnalyzerApp() {
           <div className="pointer-events-none sticky bottom-6 flex justify-center">
             <button
               onClick={reset}
-              className="glow-accent pointer-events-auto flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              className="pointer-events-auto flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent shadow-paper-lg transition-colors hover:bg-accent-dim focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base"
             >
-              <RotateCcw size={16} />
+              <RotateCcw size={16} aria-hidden="true" />
               Analyze another resume
             </button>
           </div>
@@ -203,7 +207,7 @@ export default function AnalyzerApp() {
     return (
       <div className="flex flex-col gap-8">
         <div className="mx-auto w-full max-w-[480px]">
-          <UploadZone onSubmit={handleSubmit} loading />
+          <UploadZone onSubmit={handleSubmit} loading progress={progress} />
         </div>
         <div className="flex flex-col gap-6">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -218,8 +222,8 @@ export default function AnalyzerApp() {
   return (
     <div className="mx-auto flex w-full max-w-[480px] flex-col gap-4">
       {state === "error" && error && (
-        <div className="animate-fade-slide-up flex items-start gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-          <AlertCircle size={18} className="mt-0.5 shrink-0" />
+        <div className="animate-fade-slide-up flex items-start gap-3 rounded-2xl border border-red/30 bg-red/10 p-4 text-sm text-red">
+          <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}

@@ -21,7 +21,7 @@ export function SkeletonBadge({ className = "" }: { className?: string }) {
 export function SkeletonCard({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`rounded-2xl border border-border bg-card p-6 ${className}`}
+      className={`rounded-2xl border border-border glass p-6 ${className}`}
       aria-hidden="true"
     >
       <div className="flex items-center gap-3">

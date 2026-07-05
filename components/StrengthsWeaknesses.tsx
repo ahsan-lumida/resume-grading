@@ -7,7 +7,7 @@ export default function StrengthsWeaknesses({ analysis }: { analysis: ResumeAnal
   const missing = analysis.missing_sections ?? [];
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6">
+    <section className="rounded-2xl border border-border glass p-6">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-secondary">
@@ -16,7 +16,7 @@ export default function StrengthsWeaknesses({ analysis }: { analysis: ResumeAnal
           <ul className="space-y-3">
             {strengths.map((s, i) => (
               <li key={i} className="flex gap-2.5">
-                <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-green-400" />
+                <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-green" aria-hidden="true" />
                 <span className="text-sm leading-relaxed text-primary">{s}</span>
               </li>
             ))}
@@ -29,7 +29,7 @@ export default function StrengthsWeaknesses({ analysis }: { analysis: ResumeAnal
           <ul className="space-y-3">
             {weaknesses.map((w, i) => (
               <li key={i} className="flex gap-2.5">
-                <XCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
+                <XCircle size={16} className="mt-0.5 shrink-0 text-red" aria-hidden="true" />
                 <span className="text-sm leading-relaxed text-primary">{w}</span>
               </li>
             ))}

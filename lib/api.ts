@@ -107,3 +107,43 @@ export async function analyzeResume(
 
   return (await res.json()) as ResumeAnalysis;
 }
+
+/**
+ * Same as analyzeResume(), but calls the streaming endpoint and returns the raw
+ * Response for the caller (the BFF route) to relay byte-for-byte to the browser.
+ * Still validates the pre-stream HTTP status here — a non-OK status means the
+ * backend rejected the request before opening the stream (bad file type, too
+ * large, auth failure, rate limited), so it maps to a real ApiError exactly like
+ * analyzeResume() does. Once this returns successfully, the response body is an
+ * NDJSON stream of ProgressEvents, not a single JSON object.
+ */
+export async function analyzeResumeStream(
+  file: File,
+  jobDescription?: string,
+): Promise<Response> {
+  const token = await getToken();
+
+  const form = new FormData();
+  form.append("file", file);
+  if (jobDescription && jobDescription.trim().length > 0) {
+    form.append("job_description", jobDescription.trim());
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/api/v1/analyze/stream`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+      cache: "no-store",
+    });
+  } catch {
+    throw new ApiError(503, "Couldn't reach the analysis service. Please try again shortly.");
+  }
+
+  if (!res.ok) {
+    throw analyzeError(res.status);
+  }
+
+  return res;
+}

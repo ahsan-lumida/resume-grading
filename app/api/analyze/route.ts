@@ -2,12 +2,17 @@
 // server-side so CLIENT_SECRET never leaves the server.
 
 import { NextResponse } from "next/server";
-import { analyzeResume } from "@/lib/api";
+import { analyzeResumeStream } from "@/lib/api";
 import { ApiError } from "@/types/analysis";
 
 // Resume analysis is slow and dynamic — never cache, never statically optimize.
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+// The backend's LLM call timeout is 90s; parsing/redaction/validation add more on
+// top. Verify this against your current Vercel plan's max function duration before
+// shipping — it must exceed the full pipeline's worst case or long analyses will be
+// cut off mid-stream.
+export const maxDuration = 120;
 
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 
@@ -40,12 +45,12 @@ export async function POST(request: Request) {
     );
   }
 
+  let backendRes: Response;
   try {
-    const analysis = await analyzeResume(
+    backendRes = await analyzeResumeStream(
       file,
       typeof jobDescription === "string" ? jobDescription : undefined,
     );
-    return NextResponse.json(analysis, { status: 200 });
   } catch (err) {
     if (err instanceof ApiError) {
       return NextResponse.json({ message: err.message }, { status: err.status });
@@ -55,4 +60,23 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+
+  if (!backendRes.body) {
+    return NextResponse.json(
+      { message: "The analysis service returned an empty response. Please try again." },
+      { status: 502 },
+    );
+  }
+
+  // Byte-for-byte relay of the backend's NDJSON stream. Build a fresh Response
+  // with an explicit, minimal header set rather than forwarding backendRes's
+  // headers verbatim.
+  return new Response(backendRes.body, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/x-ndjson; charset=utf-8",
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
 }

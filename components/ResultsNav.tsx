@@ -42,7 +42,7 @@ export default function ResultsNav({ sections }: { sections: NavSection[] }) {
             <li key={s.id}>
               <a href={`#${s.id}`} className="group flex items-center justify-end gap-2.5">
                 <span
-                  className={`whitespace-nowrap rounded-md bg-elevated/80 px-2 py-0.5 text-xs font-medium opacity-0 backdrop-blur transition-opacity duration-150 group-hover:opacity-100 ${
+                  className={`whitespace-nowrap rounded-md border border-border bg-card px-2 py-0.5 text-xs font-medium opacity-0 shadow-paper-sm transition-opacity duration-150 group-hover:opacity-100 ${
                     isActive ? "text-primary" : "text-secondary"
                   }`}
                 >

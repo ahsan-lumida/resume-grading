@@ -39,8 +39,8 @@ export default function AtsResumeChecker() {
       />
 
       <section className="py-12 sm:py-16">
-        <h1 className="text-balance text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
-          Free <span className="text-gradient">ATS Resume Checker</span>
+        <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
+          Free ATS Resume Checker
         </h1>
         <p className="mt-5 max-w-2xl text-balance text-base leading-relaxed text-secondary sm:text-lg">
           Most resumes are filtered by an applicant tracking system before a human ever reads them.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   CheckCircle2,
   ChevronDown,
@@ -8,6 +8,10 @@ import {
   Loader2,
   UploadCloud,
 } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import TiltCard from "@/components/motion/TiltCard";
+import Magnetic from "@/components/motion/Magnetic";
+import type { ProgressStage } from "@/types/analysis";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const ACCEPT = ".pdf,.docx";
@@ -15,12 +19,15 @@ const VALID_TYPES = [
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
-const LOADING_MESSAGES = [
-  "Parsing your resume...",
-  "Redacting personal info...",
-  "Running AI analysis...",
-  "Generating improvements...",
-];
+
+// Real stage names streamed from the backend, mapped to the same copy shown before.
+const STAGE_LABELS: Record<ProgressStage, string> = {
+  parsing: "Parsing your resume...",
+  redacting_pii: "Redacting personal info...",
+  calling_llm: "Running AI analysis...",
+  validating: "Generating improvements...",
+};
+const DEFAULT_LOADING_LABEL = "Analyzing...";
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -40,27 +47,19 @@ function validate(file: File): string | null {
 export default function UploadZone({
   onSubmit,
   loading,
+  progress = null,
 }: {
   onSubmit: (file: File, jobDescription?: string) => void;
   loading: boolean;
+  progress?: { stage: ProgressStage; pct: number } | null;
 }) {
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [jdOpen, setJdOpen] = useState(false);
   const [jd, setJd] = useState("");
-  const [msgIndex, setMsgIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Cycle status messages while the analysis runs. (Index is reset in
-  // handleSubmit so each run starts on the first message.)
-  useEffect(() => {
-    if (!loading) return;
-    const id = setInterval(() => {
-      setMsgIndex((i) => (i + 1) % LOADING_MESSAGES.length);
-    }, 3000);
-    return () => clearInterval(id);
-  }, [loading]);
+  const reduceMotion = useReducedMotion();
 
   function acceptFile(f: File | undefined) {
     if (!f) return;
@@ -83,75 +82,104 @@ export default function UploadZone({
 
   function handleSubmit() {
     if (!file || loading) return;
-    setMsgIndex(0);
     onSubmit(file, jd);
   }
 
   return (
     <div className="w-full">
-      {/* Drop zone */}
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          if (!loading) setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={handleDrop}
-        onClick={() => !loading && inputRef.current?.click()}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if ((e.key === "Enter" || e.key === " ") && !loading) inputRef.current?.click();
-        }}
-        className={`group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center backdrop-blur transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base ${
-          dragOver
-            ? "border-accent bg-elevated shadow-[0_0_50px_-12px_rgba(79,110,247,0.6)]"
-            : "border-border-bright bg-card/70 hover:border-accent/60 hover:bg-elevated/70"
-        } ${loading ? "pointer-events-none opacity-60" : ""}`}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          accept={ACCEPT}
-          className="hidden"
-          onChange={(e) => acceptFile(e.target.files?.[0])}
-        />
-        {file ? (
-          <div className="flex items-center gap-3">
-            <CheckCircle2 className="text-green-400" size={22} />
-            <div className="text-left">
-              <p className="flex items-center gap-2 text-sm font-medium text-primary">
-                <FileText size={15} className="text-secondary" />
-                {file.name}
+      {/* Drop zone — frosted glass panel with mouse-tracked 3D tilt */}
+      <TiltCard maxTilt={4} className="rounded-2xl">
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            if (!loading) setDragOver(true);
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          onClick={() => !loading && inputRef.current?.click()}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if ((e.key === "Enter" || e.key === " ") && !loading) inputRef.current?.click();
+          }}
+          className={`group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center backdrop-blur-xl transition-[border-color,box-shadow,background-color,transform] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base ${
+            dragOver
+              ? "scale-[1.015] border-accent bg-accent/[0.08] shadow-[0_0_40px_var(--accent-glow),inset_0_1px_0_rgba(255,255,255,0.1)]"
+              : "border-white/20 bg-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.35)] hover:border-accent/50 hover:bg-white/[0.06]"
+          } ${loading ? "pointer-events-none opacity-60" : ""}`}
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            accept={ACCEPT}
+            className="hidden"
+            onChange={(e) => acceptFile(e.target.files?.[0])}
+          />
+          {file ? (
+            <motion.div
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              className="flex items-center gap-3"
+            >
+              <CheckCircle2 className="text-green" size={22} aria-hidden="true" />
+              <div className="text-left">
+                <p className="flex items-center gap-2 text-sm font-medium text-primary">
+                  <FileText size={15} className="text-secondary" />
+                  {file.name}
+                </p>
+                <p className="text-xs text-tertiary">{formatSize(file.size)}</p>
+              </div>
+            </motion.div>
+          ) : (
+            <>
+              <span
+                className={`flex h-14 w-14 items-center justify-center rounded-2xl ring-1 transition-all duration-300 ${
+                  dragOver
+                    ? "bg-accent/15 ring-accent/50"
+                    : "bg-elevated ring-border-bright group-hover:ring-accent/50"
+                }`}
+              >
+                <UploadCloud
+                  className={`transition-all duration-300 ${
+                    dragOver ? "-translate-y-0.5 text-accent" : "text-secondary group-hover:text-accent"
+                  }`}
+                  size={26}
+                  aria-hidden="true"
+                />
+              </span>
+              <p className="mt-4 text-sm font-medium text-primary">
+                {dragOver ? (
+                  "Drop it — we've got it from here"
+                ) : (
+                  <>
+                    Drop your resume here, or <span className="text-accent">click to browse</span>
+                  </>
+                )}
               </p>
-              <p className="text-xs text-tertiary">{formatSize(file.size)}</p>
-            </div>
-          </div>
-        ) : (
-          <>
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-elevated ring-1 ring-border-bright transition-colors group-hover:ring-accent/50">
-              <UploadCloud
-                className="text-secondary transition-colors group-hover:text-accent"
-                size={26}
-              />
-            </span>
-            <p className="mt-4 text-sm font-medium text-primary">
-              Drop your resume here, or{" "}
-              <span className="text-accent">click to browse</span>
-            </p>
-            <p className="mt-1 text-xs text-tertiary">PDF or DOCX, up to 5 MB</p>
-          </>
-        )}
-      </div>
+              <p className="mt-1 text-xs text-tertiary">PDF or DOCX, up to 5 MB</p>
+            </>
+          )}
+        </div>
+      </TiltCard>
 
-      {fileError && <p className="mt-2 text-sm text-red-400">{fileError}</p>}
+      {fileError && (
+        <motion.p
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-2 text-sm text-red"
+        >
+          {fileError}
+        </motion.p>
+      )}
 
       {/* Collapsible job description */}
       <div className="mt-4">
         <button
           type="button"
           onClick={() => setJdOpen((v) => !v)}
-          className="flex items-center gap-1.5 text-sm font-medium text-secondary transition-colors hover:text-primary"
+          aria-expanded={jdOpen}
+          className="flex items-center gap-1.5 rounded text-sm font-medium text-secondary transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <ChevronDown
             size={16}
@@ -159,34 +187,57 @@ export default function UploadZone({
           />
           Add job description for tailoring tips
         </button>
-        {jdOpen && (
-          <textarea
-            value={jd}
-            onChange={(e) => setJd(e.target.value)}
-            placeholder="Paste the job description here..."
-            rows={5}
-            disabled={loading}
-            className="mt-3 w-full resize-y rounded-xl border border-border bg-base p-3 text-sm text-primary placeholder:text-tertiary focus:border-border-bright focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base"
-          />
-        )}
+        <AnimatePresence initial={false}>
+          {jdOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <textarea
+                value={jd}
+                onChange={(e) => setJd(e.target.value)}
+                placeholder="Paste the job description here..."
+                rows={5}
+                disabled={loading}
+                className="mt-3 w-full resize-y rounded-xl border border-border bg-white/[0.03] p-3 text-sm text-primary backdrop-blur-xl placeholder:text-tertiary focus:border-border-bright focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Submit */}
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={!file || loading}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-2 px-6 py-3.5 font-semibold text-white transition-all duration-200 hover:shadow-[0_10px_40px_-12px_rgba(79,110,247,0.85)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
-      >
-        {loading ? (
-          <>
-            <Loader2 size={18} className="animate-spin" />
-            {LOADING_MESSAGES[msgIndex]}
-          </>
-        ) : (
-          "Analyze My Resume →"
-        )}
-      </button>
+      {/* Submit — magnetic primary CTA with press scale-down */}
+      <Magnetic className="mt-5" strength={0.08} maxShift={5}>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={!file || loading}
+          className={`flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3.5 font-semibold text-on-accent transition-[background-color,box-shadow] duration-200 hover:bg-accent-dim focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base disabled:cursor-not-allowed disabled:opacity-40 ${
+            file && !loading ? "glow-accent" : ""
+          }`}
+        >
+          {loading ? (
+            <>
+              <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+              {progress ? `${STAGE_LABELS[progress.stage]} (${progress.pct}%)` : DEFAULT_LOADING_LABEL}
+            </>
+          ) : (
+            "Analyze My Resume →"
+          )}
+        </button>
+      </Magnetic>
+
+      {loading && (
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-elevated">
+          <div
+            className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
+            style={{ width: `${Math.min(100, Math.max(0, progress?.pct ?? 0))}%` }}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -100,6 +100,16 @@ export interface ResumeAnalysis {
 // UI state machine for the analysis page.
 export type ApiState = "idle" | "loading" | "done" | "error";
 
+// NDJSON event contract from POST /api/v1/analyze/stream (and relayed as-is by
+// /api/analyze). Keep this in sync with app/models/progress.py in resume-api —
+// there is no shared package between the two repos.
+export type ProgressStage = "parsing" | "redacting_pii" | "calling_llm" | "validating";
+
+export type ProgressEvent =
+  | { stage: ProgressStage; pct: number }
+  | { stage: "done"; pct: 100; result: ResumeAnalysis }
+  | { stage: "error"; code: string; message: string };
+
 // Auth token response from POST /api/v1/auth/token.
 export interface TokenResponse {
   access_token: string;

@@ -12,7 +12,7 @@ const TABS: { key: Priority; label: string }[] = [
 
 function ImprovementCard({ item }: { item: Improvement }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 transition-colors duration-150 hover:border-border-bright hover:bg-elevated">
+    <div className="rounded-2xl border border-border glass p-5 transition-colors duration-150 hover:border-border-bright hover:bg-elevated">
       <div className="flex items-start gap-3">
         <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-elevated text-xs font-semibold text-secondary">
           {item.rank}
@@ -83,7 +83,7 @@ export default function ImprovementsBoard({
       </div>
 
       {filtered.length === 0 ? (
-        <p className="rounded-2xl border border-border bg-card p-6 text-sm text-tertiary">
+        <p className="rounded-2xl border border-border glass p-6 text-sm text-tertiary">
           No improvements in this category.
         </p>
       ) : (

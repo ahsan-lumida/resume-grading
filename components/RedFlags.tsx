@@ -3,16 +3,16 @@ import type { ResumeAnalysis, Severity } from "@/types/analysis";
 
 const severityMeta: Record<Severity, { border: string; badge: string }> = {
   minor: {
-    border: "border-l-amber-500",
-    badge: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    border: "border-l-amber",
+    badge: "bg-amber/10 text-amber border-amber/20",
   },
   moderate: {
-    border: "border-l-orange-500",
-    badge: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+    border: "border-l-tag-clay",
+    badge: "bg-tag-clay/10 text-tag-clay border-tag-clay/20",
   },
   critical: {
-    border: "border-l-red-500",
-    badge: "bg-red-500/10 text-red-400 border-red-500/20",
+    border: "border-l-red",
+    badge: "bg-red/10 text-red border-red/20",
   },
 };
 
@@ -27,8 +27,8 @@ export default function RedFlags({
         Red Flags
       </h2>
       {!flags || flags.length === 0 ? (
-        <div className="flex items-center gap-2 rounded-2xl border border-green-500/20 bg-green-500/5 p-5 text-sm font-medium text-green-400">
-          <CheckCircle2 size={18} />
+        <div className="flex items-center gap-2 rounded-2xl border border-green/20 bg-green/5 p-5 text-sm font-medium text-green">
+          <CheckCircle2 size={18} aria-hidden="true" />
           No red flags detected
         </div>
       ) : (
@@ -38,7 +38,7 @@ export default function RedFlags({
             return (
               <div
                 key={i}
-                className={`rounded-2xl border border-border border-l-4 bg-card p-5 ${meta.border}`}
+                className={`rounded-2xl border border-border border-l-4 glass p-5 ${meta.border}`}
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold tracking-tight text-primary">{f.flag}</span>

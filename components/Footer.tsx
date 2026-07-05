@@ -13,7 +13,7 @@ export default function Footer() {
         </div>
         {FOOTER_COLUMNS.map((col) => (
           <nav key={col.heading} aria-label={col.heading}>
-            <h3 className="text-xs font-medium uppercase tracking-wider text-tertiary">
+            <h3 className="font-mono text-xs font-medium uppercase tracking-wider text-tertiary">
               {col.heading}
             </h3>
             <ul className="mt-4 space-y-2.5">

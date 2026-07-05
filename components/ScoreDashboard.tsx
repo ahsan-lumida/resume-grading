@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -7,62 +8,78 @@ import {
   RadarChart,
   ResponsiveContainer,
 } from "recharts";
+import { motion, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, HelpCircle, TrendingDown, TrendingUp } from "lucide-react";
 import type { CareerTrajectory, ResumeAnalysis } from "@/types/analysis";
-import { scoreHex } from "@/lib/ui";
+import { scoreToGrade } from "@/lib/ui";
 
-const GAUGE = { size: 220, stroke: 10, r: 100, cx: 110, cy: 110 };
-// Length of a semicircle of radius r (π·r).
-const ARC_LEN = Math.PI * GAUGE.r;
+const RING_SIZE = 144;
+const RING_RADIUS = 62;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
-function ArcGauge({ score }: { score: number }) {
+// Radial score ring: the arc sweeps 0 → score and the number counts up on the
+// same spring, so they always agree. Static under prefers-reduced-motion.
+function ScoreRing({ score }: { score: number }) {
   const clamped = Math.max(0, Math.min(10, score));
-  const color = scoreHex(clamped);
-  const offset = ARC_LEN * (1 - clamped / 10);
-  const display = Number.isInteger(clamped) ? String(clamped) : clamped.toFixed(1);
+  const grade = scoreToGrade(clamped);
+  const reduceMotion = useReducedMotion();
+
+  const spring = useSpring(0, { stiffness: 45, damping: 16 });
+  const dashOffset = useTransform(spring, (v) => RING_CIRCUMFERENCE * (1 - v / 10));
+  const display = useTransform(spring, (v) => (Math.round(v * 10) / 10).toFixed(1));
+
+  useEffect(() => {
+    if (reduceMotion) spring.jump(clamped);
+    else spring.set(clamped);
+  }, [clamped, reduceMotion, spring]);
 
   return (
-    <div className="relative" style={{ width: GAUGE.size, height: GAUGE.cy + GAUGE.stroke }}>
+    <div className="flex flex-col items-center gap-3">
       <div
-        className="pointer-events-none absolute left-1/2 top-[58%] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-        style={{ backgroundColor: color, opacity: 0.22 }}
-      />
-      <svg
-        width={GAUGE.size}
-        height={GAUGE.cy + GAUGE.stroke}
-        viewBox={`0 0 ${GAUGE.size} ${GAUGE.cy + GAUGE.stroke}`}
+        className="relative"
         role="img"
-        aria-label={`Overall score ${display} out of 10`}
+        aria-label={`Overall grade ${grade}, score ${clamped.toFixed(1)} out of 10`}
       >
-        {/* Track */}
-        <path
-          d={`M ${GAUGE.cx - GAUGE.r} ${GAUGE.cy} A ${GAUGE.r} ${GAUGE.r} 0 0 1 ${GAUGE.cx + GAUGE.r} ${GAUGE.cy}`}
-          fill="none"
-          stroke="var(--border)"
-          strokeWidth={GAUGE.stroke}
-          strokeLinecap="round"
-        />
-        {/* Fill */}
-        <path
-          d={`M ${GAUGE.cx - GAUGE.r} ${GAUGE.cy} A ${GAUGE.r} ${GAUGE.r} 0 0 1 ${GAUGE.cx + GAUGE.r} ${GAUGE.cy}`}
-          fill="none"
-          stroke={color}
-          strokeWidth={GAUGE.stroke}
-          strokeLinecap="round"
-          strokeDasharray={ARC_LEN}
-          strokeDashoffset={offset}
-          style={{
-            transition: "stroke-dashoffset 800ms cubic-bezier(0.16, 1, 0.3, 1)",
-            filter: `drop-shadow(0 0 6px ${color}66)`,
-          }}
-        />
-      </svg>
-      <div className="absolute inset-x-0 bottom-1 flex items-end justify-center gap-1">
-        <span className="text-5xl font-bold tracking-tight" style={{ color }}>
-          {display}
-        </span>
-        <span className="mb-1 text-2xl text-secondary">/ 10</span>
+        <svg
+          width={RING_SIZE}
+          height={RING_SIZE}
+          viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
+          aria-hidden="true"
+        >
+          <circle
+            cx={RING_SIZE / 2}
+            cy={RING_SIZE / 2}
+            r={RING_RADIUS}
+            fill="none"
+            stroke="var(--accent-2-soft)"
+            strokeWidth="9"
+          />
+          <motion.circle
+            cx={RING_SIZE / 2}
+            cy={RING_SIZE / 2}
+            r={RING_RADIUS}
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="9"
+            strokeLinecap="round"
+            strokeDasharray={RING_CIRCUMFERENCE}
+            style={{ strokeDashoffset: dashOffset }}
+            transform={`rotate(-90 ${RING_SIZE / 2} ${RING_SIZE / 2})`}
+          />
+        </svg>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex flex-col items-center justify-center"
+        >
+          <motion.span className="font-display text-4xl font-bold tabular-nums text-accent">
+            {display}
+          </motion.span>
+          <span className="font-mono text-xs text-tertiary">/ 10</span>
+        </div>
       </div>
+      <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-0.5 font-display text-sm font-bold text-accent">
+        Grade {grade}
+      </span>
     </div>
   );
 }
@@ -71,13 +88,14 @@ const trajectoryMeta: Record<
   CareerTrajectory,
   { label: string; Icon: typeof TrendingUp; className: string }
 > = {
-  ascending: { label: "Ascending", Icon: TrendingUp, className: "text-green-400" },
-  lateral: { label: "Lateral", Icon: ArrowRight, className: "text-amber-400" },
-  descending: { label: "Descending", Icon: TrendingDown, className: "text-red-400" },
+  ascending: { label: "Ascending", Icon: TrendingUp, className: "text-green" },
+  lateral: { label: "Lateral", Icon: ArrowRight, className: "text-amber" },
+  descending: { label: "Descending", Icon: TrendingDown, className: "text-red" },
   unclear: { label: "Unclear", Icon: HelpCircle, className: "text-secondary" },
 };
 
 export default function ScoreDashboard({ analysis }: { analysis: ResumeAnalysis }) {
+  const reduceMotion = useReducedMotion();
   const radarData = [
     { metric: "Experience", value: analysis.experience_score },
     { metric: "Impact", value: analysis.achievement_impact_score },
@@ -90,11 +108,11 @@ export default function ScoreDashboard({ analysis }: { analysis: ResumeAnalysis 
   const topPct = Math.max(1, 100 - Math.round(percentile));
 
   return (
-    <section className="ring-gradient glow-soft rounded-2xl border border-border bg-card p-6 md:p-8">
+    <section className="glass rounded-2xl border border-border p-6 md:p-8">
       <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-between">
-        {/* Gauge + rationale */}
+        {/* Score ring + rationale */}
         <div className="flex flex-col items-center text-center md:w-1/2">
-          <ArcGauge score={analysis.overall_score} />
+          <ScoreRing score={analysis.overall_score} />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-secondary">
             {analysis.score_rationale}
           </p>
@@ -115,6 +133,7 @@ export default function ScoreDashboard({ analysis }: { analysis: ResumeAnalysis 
                 fill="var(--accent-glow)"
                 fillOpacity={1}
                 dot={{ fill: "var(--accent)", r: 3 }}
+                isAnimationActive={!reduceMotion}
               />
             </RadarChart>
           </ResponsiveContainer>
@@ -139,9 +158,11 @@ export default function ScoreDashboard({ analysis }: { analysis: ResumeAnalysis 
             Top {topPct}%
           </span>
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
-            <div
-              className="h-full rounded-full bg-accent transition-all duration-700"
-              style={{ width: `${percentile}%` }}
+            <motion.div
+              className="h-full rounded-full bg-accent"
+              initial={{ width: reduceMotion ? `${percentile}%` : "0%" }}
+              animate={{ width: `${percentile}%` }}
+              transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
         </div>

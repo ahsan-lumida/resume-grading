@@ -1,7 +1,7 @@
 // Centralized SEO config + JSON-LD builders.
 // SITE_URL is env-driven so the production domain can change without code edits.
 
-export const SITE_URL = "https://resumegrading.com";
+export const SITE_URL = "https://www.resumegrading.com";
 
 export const SITE_NAME = "ResumeGrading";
 export const SITE_TAGLINE = "Grade your resume. Land the interview.";

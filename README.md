@@ -2,7 +2,7 @@
 
 Free AI resume checker. Upload a resume, get an instant score, missing ATS keywords, rewritten bullets, red flags, and interview probability by company tier — in under 60 seconds. No signup, no paywall.
 
-**Live:** https://resumegrading.com  
+**Live:** https://www.resumegrading.com  
 **API:** https://resume-api-3w5v.onrender.com
 
 ---
@@ -132,7 +132,7 @@ CLIENT_SECRET=<shared secret — must match backend>
 
 ### Backend (`resume-api/.env`)
 ```
-ALLOWED_ORIGINS=["http://localhost:3000","https://resumegrading.com"]
+ALLOWED_ORIGINS=["http://localhost:3000","https://www.resumegrading.com"]
 CLIENT_SECRET=<shared secret>
 JWT_SECRET_KEY=<random secret>
 JWT_EXPIRE_MINUTES=60

@@ -14,14 +14,6 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  keywords: [
-    "ATS resume",
-    "how to write an ATS resume",
-    "ATS-friendly resume",
-    "ATS resume format",
-    "ATS resume tips",
-    "applicant tracking system resume",
-  ],
   alternates: { canonical: PATH },
 };
 
@@ -175,11 +167,15 @@ export default function AtsResumeGuide() {
             <Link href="/ats-resume-checker" className="text-accent hover:underline">
               ATS resume checker
             </Link>{" "}
-            to see your parse rate and missing keywords, or get your full{" "}
+            to scan it against a job description and see your missing keywords, or get your full{" "}
             <Link href="/resume-score" className="text-accent hover:underline">
               resume score
             </Link>{" "}
-            with ranked fixes.
+            with ranked fixes. In a hurry? You can also just{" "}
+            <Link href="/" className="text-accent hover:underline">
+              use our free AI resume checker
+            </Link>{" "}
+            for an instant overall review.
           </p>
         </section>
       </article>

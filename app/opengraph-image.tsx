@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 // Glass tokens in app/globals.css (kept literal — no CSS vars in ImageResponse).
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "ResumeGrade — Free AI Resume Reviewer";
+export const alt = "ResumeGrading — Free AI Resume Reviewer";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -52,7 +52,7 @@ export default function OpengraphImage() {
             />
           </div>
           <div style={{ fontSize: 34, fontWeight: 700, color: "#F4F5F9", letterSpacing: -1 }}>
-            ResumeGrade
+            ResumeGrading
           </div>
         </div>
         <div

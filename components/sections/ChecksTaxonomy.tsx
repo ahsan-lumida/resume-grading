@@ -60,7 +60,7 @@ export default function ChecksTaxonomy() {
       </Reveal>
       <Reveal delay={0.08}>
         <p className="mt-4 max-w-2xl text-balance leading-relaxed text-secondary">
-          ResumeGrade goes well beyond spelling and formatting — it grades the things recruiters
+          ResumeGrading goes well beyond spelling and formatting — it grades the things recruiters
           and applicant tracking systems actually weigh, then tells you how to fix each one.
         </p>
       </Reveal>

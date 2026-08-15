@@ -34,7 +34,7 @@ export default function RedFlags({
       ) : (
         <div className="space-y-3">
           {flags.map((f, i) => {
-            const meta = severityMeta[f.severity];
+            const meta = severityMeta[f.severity] ?? severityMeta.moderate;
             return (
               <div
                 key={i}

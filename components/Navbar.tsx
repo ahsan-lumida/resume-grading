@@ -32,7 +32,7 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex h-16 w-full max-w-[1100px] items-center justify-between px-5">
         <div className="flex items-center gap-8">
-          <Link href="/" className="transition-opacity hover:opacity-80" aria-label="ResumeGrade home">
+          <Link href="/" className="transition-opacity hover:opacity-80" aria-label="ResumeGrading home">
             <Logo />
           </Link>
           <div className="hidden items-center gap-0.5 md:flex">

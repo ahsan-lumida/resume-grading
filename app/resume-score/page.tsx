@@ -8,26 +8,18 @@ import Cta from "@/components/sections/Cta";
 import { FAQ_HOME } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free Resume Score Checker — Score My Resume | ResumeGrade" },
+  title: { absolute: "Instant Resume Score — Free Resume Grade & Benchmarks | ResumeGrading" },
   description:
-    "Score my resume: get an instant 0–10 resume score with AI feedback on content, impact, ATS keywords, and structure — plus the exact fixes to raise it. Free, private, no signup.",
-  keywords: [
-    "resume score",
-    "score my resume",
-    "resume score checker",
-    "resume grader",
-    "what is a good resume score",
-    "free resume review",
-  ],
+    "Get an instant 0–10 resume score with a per-dimension breakdown — experience, impact, skills, structure, and ATS — benchmarked against strong resumes, plus your interview odds by company tier. Free, no signup.",
   alternates: { canonical: "/resume-score" },
 };
 
 const SCORE_FAQ = FAQ_HOME.filter((f) =>
   [
     "What is a good resume score?",
-    "What is a resume checker and how does ResumeGrade work?",
+    "What is a resume checker and how does ResumeGrading work?",
     "How is the ATS score calculated?",
-    "Is ResumeGrade really free?",
+    "Is ResumeGrading really free?",
   ].includes(f.q),
 );
 
@@ -51,11 +43,12 @@ export default function ResumeScore() {
 
       <section className="py-12 sm:py-16">
         <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
-          Free Resume Score Checker
+          Calculate Your Instant Resume Score
         </h1>
         <p className="mt-5 max-w-2xl text-balance text-base leading-relaxed text-secondary sm:text-lg">
-          Score my resume — instantly. Upload your resume to get an honest 0–10 score with a clear
-          rationale, your ATS score, and a ranked list of the highest-impact fixes to raise it.
+          Upload your resume for an instant 0–10 grade with a per-dimension breakdown — experience,
+          impact, skills, structure, and ATS — benchmarked against strong resumes, plus your
+          interview odds by company tier.
         </p>
       </section>
 
@@ -69,7 +62,7 @@ export default function ResumeScore() {
         </h2>
         <div className="mt-6 max-w-3xl space-y-4 text-sm leading-relaxed text-secondary sm:text-base">
           <p>
-            On ResumeGrade&apos;s 0–10 scale, <strong className="text-primary">8 or above</strong> is strong
+            On ResumeGrading&apos;s 0–10 scale, <strong className="text-primary">8 or above</strong> is strong
             and competitive, <strong className="text-primary">5–7</strong> means a solid resume with
             clear room to improve, and <strong className="text-primary">below 5</strong> signals
             issues a recruiter or ATS would likely catch. Your score comes with a plain-English

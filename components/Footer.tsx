@@ -33,7 +33,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-border">
         <p className="mx-auto w-full max-w-[1100px] px-5 py-6 text-xs text-tertiary">
-          © {new Date().getFullYear()} ResumeGrade — Free AI resume review. Private, no signup.
+          © {new Date().getFullYear()} ResumeGrading — Free AI resume review. Private, no signup.
         </p>
       </div>
     </footer>

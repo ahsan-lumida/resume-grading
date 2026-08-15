@@ -103,7 +103,9 @@ export default function ScoreDashboard({ analysis }: { analysis: ResumeAnalysis 
     { metric: "Structure", value: analysis.structure_readability_score },
   ];
 
-  const traj = trajectoryMeta[analysis.career_trajectory];
+  // Fall back to "unclear" if the API returns an out-of-enum trajectory —
+  // otherwise traj?.Icon / traj?.label below would blow up the whole results page.
+  const traj = trajectoryMeta[analysis.career_trajectory] ?? trajectoryMeta.unclear;
   const percentile = Math.max(0, Math.min(100, analysis.market_competitiveness_percentile));
   const topPct = Math.max(1, 100 - Math.round(percentile));
 

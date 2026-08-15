@@ -222,7 +222,7 @@ export default function UploadZone({
           {loading ? (
             <>
               <Loader2 size={18} className="animate-spin" aria-hidden="true" />
-              {progress ? `${STAGE_LABELS[progress.stage]} (${progress.pct}%)` : DEFAULT_LOADING_LABEL}
+              {progress ? `${STAGE_LABELS[progress.stage] ?? DEFAULT_LOADING_LABEL} (${progress.pct}%)` : DEFAULT_LOADING_LABEL}
             </>
           ) : (
             "Analyze My Resume →"

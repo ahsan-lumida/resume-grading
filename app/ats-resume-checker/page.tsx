@@ -8,22 +8,14 @@ import Cta from "@/components/sections/Cta";
 import { ATS_PLATFORMS, FAQ_HOME } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Free ATS Resume Checker — Pass the ATS | ResumeGrade" },
+  title: { absolute: "ATS Resume Checker — Scan Against Job Descriptions | ResumeGrading" },
   description:
-    "Check whether your resume passes applicant tracking systems like Workday, Greenhouse, and Lever. Get your ATS score, missing keywords, and parsing fixes instantly. Free, no signup.",
-  keywords: [
-    "ATS resume checker",
-    "ATS checker",
-    "applicant tracking system checker",
-    "ATS-friendly resume",
-    "resume ATS score",
-    "does my resume pass ATS",
-  ],
+    "Match your resume against any job description and see exactly which ATS keywords you're missing. Paste a job post, upload your resume, and get the specific terms to add — instant, free, no signup.",
   alternates: { canonical: "/ats-resume-checker" },
 };
 
 const ATS_FAQ = FAQ_HOME.filter((f) =>
-  ["How does an ATS read my resume?", "How do I make my resume ATS-friendly?", "Which ATS platforms does ResumeGrade check against?", "How is the ATS score calculated?"].includes(
+  ["How does an ATS read my resume?", "How do I make my resume ATS-friendly?", "Which ATS platforms does ResumeGrading check against?", "How is the ATS score calculated?"].includes(
     f.q,
   ),
 );
@@ -40,12 +32,12 @@ export default function AtsResumeChecker() {
 
       <section className="py-12 sm:py-16">
         <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
-          Free ATS Resume Checker
+          Scan Your Resume Against Any Job Description
         </h1>
         <p className="mt-5 max-w-2xl text-balance text-base leading-relaxed text-secondary sm:text-lg">
-          Most resumes are filtered by an applicant tracking system before a human ever reads them.
-          Upload yours to see how cleanly an ATS can parse it, which keywords you&apos;re missing,
-          and exactly what to fix — in under 60 seconds.
+          Paste in the job post you&apos;re targeting and upload your resume to see exactly which ATS
+          keywords the role wants and which ones you&apos;re missing. Get the specific terms and
+          parsing fixes to match the posting — in under 60 seconds.
         </p>
       </section>
 
@@ -72,7 +64,7 @@ export default function AtsResumeChecker() {
             break parsing — so strong candidates get filtered out for formatting reasons alone.
           </p>
           <p>
-            ResumeGrade evaluates your resume using signals researched across major ATS platforms including{" "}
+            ResumeGrading evaluates your resume using signals researched across major ATS platforms including{" "}
             {ATS_PLATFORMS.join(", ")}. If our checker can read and understand your resume, company
             systems generally can too — and you&apos;ll see the specific keywords and structure
             changes that move your ATS score up.

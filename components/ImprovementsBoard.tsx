@@ -20,7 +20,7 @@ function ImprovementCard({ item }: { item: Improvement }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${sectionTagClass[item.section]}`}
+              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${sectionTagClass[item.section] ?? sectionTagClass.other}`}
             >
               {item.section}
             </span>
@@ -29,12 +29,12 @@ function ImprovementCard({ item }: { item: Improvement }) {
           <p className="mt-1 text-sm leading-relaxed text-secondary">{item.description}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${levelClass[item.effort]}`}
+              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${levelClass[item.effort] ?? levelClass.medium}`}
             >
               {item.effort} effort
             </span>
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${levelClass[item.impact]}`}
+              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${levelClass[item.impact] ?? levelClass.medium}`}
             >
               {item.impact} impact
             </span>

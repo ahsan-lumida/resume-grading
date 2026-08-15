@@ -1,13 +1,25 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/seo";
 import { ROUTES } from "@/lib/content";
+import { ROLES } from "@/data/roles";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  return ROUTES.map((route) => ({
+
+  const staticRoutes: MetadataRoute.Sitemap = ROUTES.map((route) => ({
     url: absoluteUrl(route.path),
     lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
+
+  // Programmatic role landing pages (app/resume-checker/[role]).
+  const roleRoutes: MetadataRoute.Sitemap = ROLES.map((role) => ({
+    url: absoluteUrl(`/resume-checker/${role.slug}`),
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...roleRoutes];
 }

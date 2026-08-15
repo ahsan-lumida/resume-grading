@@ -33,7 +33,7 @@ export default function Logo({
   return (
     <span className={`flex items-center gap-2.5 ${className}`}>
       <LogoMark size={size} />
-      <span className="font-display text-lg font-semibold tracking-tight text-primary">ResumeGrade</span>
+      <span className="font-display text-lg font-semibold tracking-tight text-primary">ResumeGrading</span>
     </span>
   );
 }

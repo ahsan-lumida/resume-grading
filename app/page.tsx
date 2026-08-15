@@ -34,7 +34,7 @@ const TRUST = [
 ];
 
 const howToJsonLd = howToLd(
-  "How to check your resume with ResumeGrade",
+  "How to check your resume with ResumeGrading",
   HOW_IT_WORKS.map((s) => ({ name: s.title, text: s.body })),
 );
 
@@ -59,7 +59,7 @@ export default function Home() {
             <h1 className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
               Free AI Resume Checker
               <br />
-              &amp; ATS Score Analyzer
+              &amp; ATS Optimizer
             </h1>
           </Reveal>
           <Reveal delay={0.16}>

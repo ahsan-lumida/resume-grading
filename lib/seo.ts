@@ -1,9 +1,9 @@
 // Centralized SEO config + JSON-LD builders.
 // SITE_URL is env-driven so the production domain can change without code edits.
 
-export const SITE_URL = "https://ai-resume-grade.vercel.app";
+export const SITE_URL = "https://resumegrading.com";
 
-export const SITE_NAME = "ResumeGrade";
+export const SITE_NAME = "ResumeGrading";
 export const SITE_TAGLINE = "Grade your resume. Land the interview.";
 
 /** Build an absolute URL for a given path. */
@@ -16,15 +16,15 @@ export interface QA {
   a: string;
 }
 
-/** WebApplication schema for the product. */
-export function webApplicationLd() {
+/** SoftwareApplication schema for the product. */
+export function softwareApplicationLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     name: SITE_NAME,
     url: SITE_URL,
     applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
+    operatingSystem: "All",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     description:
       "AI-powered resume reviewer with ATS scoring, bullet rewrites, and interview probability estimates.",

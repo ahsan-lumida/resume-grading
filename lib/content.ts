@@ -2,6 +2,7 @@
 // footer stay consistent and DRY.
 
 import type { QA } from "@/lib/seo";
+import { ROLES } from "@/data/roles";
 
 // ATS platforms we reference for long-tail keyword coverage.
 export const ATS_PLATFORMS = ["Workday", "Greenhouse", "Lever", "Taleo", "iCIMS"];
@@ -181,6 +182,13 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     heading: "Guides",
     links: [{ href: "/guides/ats-resume", label: "How to Write an ATS Resume" }],
+  },
+  {
+    heading: "Resume Checkers by Role",
+    links: ROLES.map((role) => ({
+      href: `/resume-checker/${role.slug}`,
+      label: `${role.title} Resume Checker`,
+    })),
   },
   {
     heading: "Get started",

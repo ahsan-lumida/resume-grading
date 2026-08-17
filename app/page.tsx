@@ -5,6 +5,7 @@ import TiltCard from "@/components/motion/TiltCard";
 import HowItWorks from "@/components/sections/HowItWorks";
 import ChecksTaxonomy from "@/components/sections/ChecksTaxonomy";
 import FaqSection from "@/components/sections/FaqSection";
+import PopularRoles from "@/components/sections/PopularRoles";
 import { FAQ_HOME, HOW_IT_WORKS } from "@/lib/content";
 import { howToLd } from "@/lib/seo";
 
@@ -125,6 +126,7 @@ export default function Home() {
       <HowItWorks />
       <ChecksTaxonomy />
       <FaqSection items={FAQ_HOME} />
+      <PopularRoles />
     </main>
   );
 }

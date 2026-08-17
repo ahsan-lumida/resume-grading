@@ -4,6 +4,7 @@ import AnalyzerApp from "@/components/AnalyzerApp";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ChecksTaxonomy from "@/components/sections/ChecksTaxonomy";
 import FaqSection from "@/components/sections/FaqSection";
+import PopularRoles from "@/components/sections/PopularRoles";
 import Cta from "@/components/sections/Cta";
 import { ATS_PLATFORMS, FAQ_HOME } from "@/lib/content";
 
@@ -75,6 +76,8 @@ export default function AtsResumeChecker() {
       <ChecksTaxonomy />
 
       <FaqSection items={ATS_FAQ} heading="ATS resume checker FAQ" />
+
+      <PopularRoles />
 
       <section className="border-t border-border py-12">
         <p className="text-sm text-secondary">

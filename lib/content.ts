@@ -193,11 +193,13 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     heading: "Resume Checkers by Role",
     links: [
-      { href: "/resume-checker", label: "All Roles & Companies" },
-      ...ROLES.map((role) => ({
-        href: `/resume-checker/${role.slug}`,
-        label: `${role.title} Resume Checker`,
-      })),
+      ...["software-engineer", "product-manager", "data-analyst", "registered-nurse", "financial-analyst"].map(
+        (slug) => {
+          const role = ROLES.find((r) => r.slug === slug)!;
+          return { href: `/resume-checker/${role.slug}`, label: `${role.title} Resume Checker` };
+        },
+      ),
+      { href: "/resume-checker", label: "View all roles & companies →" },
     ],
   },
   {

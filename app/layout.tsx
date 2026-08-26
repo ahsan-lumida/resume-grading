@@ -58,6 +58,15 @@ export const metadata: Metadata = {
   appleWebApp: { title: "ResumeGrading", statusBarStyle: "black-translucent" },
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [
+      { url: "/icons/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/icons/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [{ rel: "mask-icon", url: "/icons/icon-mono.svg", color: "#8B5CF6" }],
+  },
   verification: { google: "RqnWTXO9UCuN5xSFe2P2GhqReG8jtwaUEmkWNnkwJjo" },
 };
 

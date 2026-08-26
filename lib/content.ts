@@ -3,6 +3,7 @@
 
 import type { QA } from "@/lib/seo";
 import { ROLES } from "@/data/roles";
+import { COMPANIES } from "@/data/companies";
 
 // ATS platforms we reference for long-tail keyword coverage.
 export const ATS_PLATFORMS = ["Workday", "Greenhouse", "Lever", "Taleo", "iCIMS"];
@@ -146,6 +147,12 @@ export interface SiteRoute {
 export const ROUTES: SiteRoute[] = [
   { path: "/", label: "Resume Checker", priority: 1.0, changeFrequency: "weekly" },
   {
+    path: "/resume-checker",
+    label: "Resume Checker Directory",
+    priority: 0.9,
+    changeFrequency: "weekly",
+  },
+  {
     path: "/ats-resume-checker",
     label: "ATS Resume Checker",
     priority: 0.9,
@@ -185,9 +192,19 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   },
   {
     heading: "Resume Checkers by Role",
-    links: ROLES.map((role) => ({
-      href: `/resume-checker/${role.slug}`,
-      label: `${role.title} Resume Checker`,
+    links: [
+      { href: "/resume-checker", label: "All Roles & Companies" },
+      ...ROLES.map((role) => ({
+        href: `/resume-checker/${role.slug}`,
+        label: `${role.title} Resume Checker`,
+      })),
+    ],
+  },
+  {
+    heading: "Resume Checkers by Company",
+    links: COMPANIES.map((company) => ({
+      href: `/resume-checker/company/${company.slug}`,
+      label: `${company.name} Resume Checker`,
     })),
   },
   {

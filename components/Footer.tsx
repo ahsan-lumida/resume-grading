@@ -6,7 +6,7 @@ import { SITE_TAGLINE } from "@/lib/seo";
 export default function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto grid w-full max-w-[1100px] grid-cols-2 gap-8 px-5 py-14 sm:grid-cols-5">
+      <div className="mx-auto grid w-full max-w-[1100px] grid-cols-2 gap-8 px-5 py-14 sm:grid-cols-3 lg:grid-cols-6">
         <div className="col-span-2 sm:col-span-1">
           <Logo size={26} />
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-secondary">{SITE_TAGLINE}</p>

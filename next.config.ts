@@ -9,6 +9,15 @@ const nextConfig: NextConfig = {
         destination: "https://www.resumegrading.com/:path*",
         permanent: true,
       },
+      // Apex domain must redirect to www — otherwise Google crawls identical
+      // content on both hosts and can override our declared canonical
+      // (GSC: "Duplicate, Google chose different canonical than user").
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "resumegrading.com" }],
+        destination: "https://www.resumegrading.com/:path*",
+        permanent: true,
+      },
     ];
   },
 };

@@ -45,14 +45,16 @@ export default async function RoleResumeChecker({
   const role = getRole(slug);
   if (!role) notFound();
 
-  const otherRoles = ROLES.filter((r) => r.slug !== role.slug);
+  const relatedRoles = ROLES.filter(
+    (r) => r.category === role.category && r.slug !== role.slug,
+  ).slice(0, 4);
 
   return (
     <main className="mx-auto w-full max-w-[1100px] px-5">
       <Breadcrumbs
         crumbs={[
           { name: "Home", path: "/" },
-          { name: "Resume Checker", path: "/" },
+          { name: "Resume Checker", path: "/resume-checker" },
           { name: `${role.title} Resume Checker`, path: `/resume-checker/${role.slug}` },
         ]}
       />
@@ -118,13 +120,13 @@ export default async function RoleResumeChecker({
         </div>
       </section>
 
-      {/* Cross-link to other roles */}
+      {/* Cross-link to related roles in the same category */}
       <section className="border-t border-border py-16 sm:py-20">
         <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">
-          Check Resumes for Other Roles
+          Check Other {role.category} Resumes
         </h2>
         <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {otherRoles.map((r) => (
+          {relatedRoles.map((r) => (
             <li key={r.slug}>
               <Link
                 href={`/resume-checker/${r.slug}`}
@@ -142,6 +144,11 @@ export default async function RoleResumeChecker({
             </li>
           ))}
         </ul>
+        <p className="mt-6 text-sm text-secondary">
+          <Link href="/resume-checker" className="text-accent hover:underline">
+            Browse all resume checkers by role &amp; company
+          </Link>
+        </p>
       </section>
 
       <Cta href="#upload" title={`Ready to grade your ${role.title} resume?`} />

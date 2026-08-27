@@ -147,3 +147,67 @@ export async function analyzeResumeStream(
 
   return res;
 }
+
+/** Maps a non-OK generate response to a user-friendly, typed error. */
+function generateError(status: number): ApiError {
+  switch (status) {
+    case 401:
+      tokenCache = null;
+      return new ApiError(401, "Your session expired. Please try again.");
+    case 413:
+      return new ApiError(413, "That file is too large. Please upload a resume under 5 MB.");
+    case 415:
+      return new ApiError(415, "Unsupported file type. Please upload a PDF or DOCX file.");
+    case 422:
+      return new ApiError(
+        422,
+        "We couldn't read your resume, or the analysis data was invalid. Please analyze your resume again.",
+      );
+    case 429:
+      return new ApiError(429, "Too many requests right now. Please wait a moment and try again.");
+    case 503:
+      return new ApiError(503, "Our AI providers are temporarily unavailable. Please try again shortly.");
+    default:
+      return new ApiError(status, "Something went wrong while generating your resume. Please try again.");
+  }
+}
+
+/**
+ * Same shape as analyzeResumeStream(), but calls POST /api/v1/generate/stream:
+ * re-parses the original file, applies the fixes from a prior analysis pass,
+ * and streams back a GeneratedResume (structured content + a rendered PDF) in
+ * the terminal "done" event. `analysisJson` is the exact JSON string the
+ * frontend already received from /api/analyze — passed through unparsed.
+ */
+export async function generateResumeStream(
+  file: File,
+  jobDescription: string | undefined,
+  analysisJson: string,
+): Promise<Response> {
+  const token = await getToken();
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("analysis", analysisJson);
+  if (jobDescription && jobDescription.trim().length > 0) {
+    form.append("job_description", jobDescription.trim());
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/api/v1/generate/stream`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+      cache: "no-store",
+    });
+  } catch {
+    throw new ApiError(503, "Couldn't reach the resume generation service. Please try again shortly.");
+  }
+
+  if (!res.ok) {
+    throw generateError(res.status);
+  }
+
+  return res;
+}

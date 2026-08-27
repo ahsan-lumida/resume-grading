@@ -2,12 +2,14 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { AlertCircle, RotateCcw, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { AlertCircle, RotateCcw, ShieldCheck, Sparkles } from "lucide-react";
 import { submitAnalysis } from "@/lib/client";
 import { ApiError, type ApiState, type ProgressStage, type ResumeAnalysis } from "@/types/analysis";
 import UploadZone from "@/components/UploadZone";
 import ResultsNav, { type NavSection } from "@/components/ResultsNav";
 import { SkeletonCard } from "@/components/Skeleton";
+import { useResumeSession } from "@/components/ResumeSessionProvider";
 
 // Heavy result components are code-split and excluded from SSR so recharts and
 // friends don't block first paint. Skeletons reserve space (no layout shift).
@@ -114,6 +116,8 @@ export default function AnalyzerApp() {
   const [analysis, setAnalysis] = useState<ResumeAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<{ stage: ProgressStage; pct: number } | null>(null);
+  const router = useRouter();
+  const { setSession } = useResumeSession();
 
   // Warm up the Render backend the moment this component mounts so it's
   // ready by the time the user finishes uploading their file.
@@ -129,6 +133,9 @@ export default function AnalyzerApp() {
       const result = await submitAnalysis(file, jobDescription, setProgress);
       setAnalysis(result);
       setState("done");
+      // Hand off to the "Generate the Updated Resume" flow without needing
+      // to re-upload — see components/ResumeSessionProvider.tsx.
+      setSession(file, jobDescription ?? "", result);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
       setState("error");
@@ -174,6 +181,32 @@ export default function AnalyzerApp() {
                 <span className="hidden sm:inline">Analyzed via {analysis.provider_used}</span>
               )}
             </div>
+          </div>
+
+          {/* Primary follow-on CTA — generates a corrected, downloadable resume
+              from this exact analysis on a dedicated page. */}
+          <div className="animate-fade-slide-up flex flex-col items-start justify-between gap-4 rounded-2xl border border-accent/30 bg-accent/[0.06] p-5 shadow-paper-sm sm:flex-row sm:items-center">
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent ring-1 ring-accent/30">
+                <Sparkles size={18} aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="font-semibold tracking-tight text-primary">
+                  Ready for a polished, corrected resume?
+                </h3>
+                <p className="mt-1 text-sm text-secondary">
+                  We&apos;ll rewrite your resume with every fix above already applied — ready to
+                  download as a PDF.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => router.push("/improved-resume")}
+              className="flex shrink-0 items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-dim focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-base"
+            >
+              <Sparkles size={16} aria-hidden="true" />
+              Generate the Updated Resume
+            </button>
           </div>
 
           {sections.map((s, i) => (

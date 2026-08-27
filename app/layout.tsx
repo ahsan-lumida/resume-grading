@@ -5,6 +5,7 @@ import Background from "@/components/Background";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
+import { ResumeSessionProvider } from "@/components/ResumeSessionProvider";
 import { SITE_URL, softwareApplicationLd } from "@/lib/seo";
 
 const sora = Sora({
@@ -92,7 +93,7 @@ export default function RootLayout({
         <SmoothScroll />
         <Background />
         <Navbar />
-        {children}
+        <ResumeSessionProvider>{children}</ResumeSessionProvider>
         <Footer />
       </body>
     </html>

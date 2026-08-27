@@ -7,7 +7,9 @@
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { ResumeAnalysis } from "@/types/analysis";
+import type { ResumeContent } from "@/types/resumeContent";
 import { SkeletonCard } from "@/components/Skeleton";
+import ResumeTemplatePreview from "@/components/ResumeTemplatePreview";
 
 const ScoreDashboard = dynamic(() => import("@/components/ScoreDashboard"), {
   loading: () => <SkeletonCard />,
@@ -160,6 +162,81 @@ const MOCK: ResumeAnalysis = {
   redaction_applied: true,
 };
 
+// Sourced from a real /generate/stream run so this preview matches what the
+// on-page template actually has to handle — long bullets, multiple projects,
+// categorized skills, a job with no location, etc.
+const MOCK_RESUME: ResumeContent = {
+  contact: {
+    name: "Ahsan Iftikhar",
+    email: "ahsaniftikhar2016@gmail.com",
+    phone: "+92307 2668682",
+    location: "Karachi, Pakistan",
+    linkedin: "linkedin.com/in/ahsaniftikhar99",
+    github: "github.com/ahsan-lumida",
+    website: "portfoliobyahsan.netlify.app",
+  },
+  summary:
+    "Senior software engineer with 4+ years delivering production fintech and AI systems, including a React web platform and React Native app serving 1,000+ active users. Built automated trade-sheet processing that reduced manual preparation from ~2 hours to ~5 seconds. Experienced across the full stack — React, React Native, Python (Flask/FastAPI), Node.js/NestJS, GCP, DevOps — balancing deterministic computation with judicious AI application.",
+  work_experience: [
+    {
+      company: "Lumida Wealth",
+      title: "Senior Software Engineer",
+      location: "New Jersey, USA (Remote)",
+      start_date: "Dec 2024",
+      end_date: "Present",
+      bullets: [
+        "Own the React front-end for an in-house equities-research platform used by the CIO team to drive live U.S. market investment decisions — factor analysis, news, earnings-call transcripts, charting, and backtesting.",
+        "Lead mobile engineer on a React Native stocks and crypto app in beta with 1,000+ active users, owning iOS and Android releases, brokerage account linking, and deep linking.",
+        "Built and own Trade Sheet, cutting trade-sheet preparation from ~2 hours of manual spreadsheet work to ~5 seconds, with live price validation before any order reaches the brokerage.",
+      ],
+    },
+    {
+      company: "Paysys Labs",
+      title: "Software Engineer",
+      location: "Karachi, Pakistan",
+      start_date: "Nov 2022",
+      end_date: "Oct 2024",
+      bullets: [
+        "Developed Jasper reports (complex SQL / PL-SQL) consumed by 300+ National Savings branches for transaction and KYC reporting.",
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: "Trade Sheet — Automated Trade Order Preparation System",
+      stack: "Python, Flask, Firestore, WebSockets, pandas",
+      description:
+        "Replaced a manual spreadsheet trade-prep workflow with a Flask REST API converting analyst allocations into exact per-account share quantities across four order types, with real-time price validation rejecting orders that deviate more than 7% from live prices.",
+      links: [],
+    },
+    {
+      name: "ResumeGrade — AI Resume Feedback App",
+      stack: "Next.js, FastAPI, Groq / Cerebras / OpenRouter",
+      description:
+        "Free AI web app returning structured, actionable resume feedback. Shipped solo: Next.js/Vercel front-end, FastAPI backend, a multi-provider LLM waterfall for reliability, spaCy-based PII redaction before any LLM call.",
+      links: ["resumegrade.vercel.app"],
+    },
+  ],
+  skills: [
+    { category: "Languages", items: ["JavaScript", "TypeScript", "Python", "C#", "SQL"] },
+    { category: "Frontend", items: ["React", "Next.js", "Vite", "React Query", "XState"] },
+    { category: "Mobile", items: ["React Native (iOS & Android)", "Reanimated / Worklets"] },
+    { category: null, items: ["Node.js", "Flask", "FastAPI", "PostgreSQL", "Docker"] },
+  ],
+  education: [
+    {
+      institution: "FAST — NUCES, Karachi, Pakistan",
+      degree: "BS, Computer Science",
+      field_of_study: null,
+      location: null,
+      start_date: "Aug 2018",
+      end_date: "Jun 2022",
+      details: null,
+    },
+  ],
+  certifications: [],
+};
+
 export default function DevPreview() {
   if (process.env.NODE_ENV === "production") notFound();
 
@@ -174,6 +251,9 @@ export default function DevPreview() {
       <ImprovementsBoard improvements={MOCK.top_improvements} />
       <BulletRewriter bullets={MOCK.rewritten_bullets} />
       <RedFlags flags={MOCK.red_flags} />
+
+      <h1 className="mt-6 text-2xl font-bold tracking-tight">Improved-resume template preview</h1>
+      <ResumeTemplatePreview resume={MOCK_RESUME} />
     </main>
   );
 }

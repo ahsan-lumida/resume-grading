@@ -88,7 +88,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationLd()) }}
         />
       </head>
-      <body className="min-h-full bg-base font-sans text-primary">
+      <body className="min-h-full bg-base font-sans text-primary" suppressHydrationWarning>
         <span id="top" className="absolute top-0" aria-hidden="true" />
         <SmoothScroll />
         <Background />

@@ -46,10 +46,22 @@ Free AI resume checker. Upload a resume, get an instant score, missing ATS keywo
 
 ```
 Browser
-  └── /api/analyze (Next.js BFF route)        ← CLIENT_SECRET stays server-side
-        └── POST /api/v1/analyze (FastAPI)
-              └── LLM pipeline (Groq → Cerebras → OpenRouter fallback)
+  ├── /api/analyze  (Next.js BFF route)       ← CLIENT_SECRET stays server-side
+  │     └── POST /api/v1/analyze/stream (FastAPI)
+  │           └── LLM pipeline → ResumeAnalysis  →  /resume-score
+  │
+  └── /api/generate (Next.js BFF route)
+        └── POST /api/v1/generate/stream (FastAPI)
+              └── LLM pipeline → rewritten resume + PDF  →  /improved-resume
 ```
+
+Both backend routes stream Server-Sent Events (`ProgressEvent`), so the UI shows
+staged progress rather than a single long spinner. The generate call reuses the
+`ResumeAnalysis` already held in `ResumeSessionProvider` instead of re-analyzing.
+
+Provider chain: **Groq → OpenRouter → OpenRouter2** (a second, different free
+model for redundancy). Cerebras is configured but out of the chain — no quota.
+See `resume-api/ARCHITECTURE.md` for the measured per-provider constraints.
 
 **Key patterns:**
 - `lib/api.ts` is `server-only` — never imported client-side
@@ -137,8 +149,17 @@ CLIENT_SECRET=<shared secret>
 JWT_SECRET_KEY=<random secret>
 JWT_EXPIRE_MINUTES=60
 GROQ_API_KEY=...
-CEREBRAS_API_KEY=...
+CEREBRAS_API_KEY=...        # configured but out of PROVIDER_ORDER (no quota → 402)
 OPENROUTER_API_KEY=...
+
+# Optional — all have working defaults in app/core/config.py
+PROVIDER_ORDER=["groq","openrouter","openrouter2"]
+ANALYZE_PROVIDER_ORDER=      # per-pipeline override; unset → PROVIDER_ORDER
+GENERATE_PROVIDER_ORDER=     # per-pipeline override; unset → PROVIDER_ORDER
+MAX_TOKENS=16384             # default output cap
+PROVIDER_MAX_TOKENS={"groq":4096}   # per-provider override — Groq counts
+                                    # max_tokens against its TPM budget
+STARTUP_MODEL_VALIDATION=true       # non-blocking /models check on boot
 ```
 
 > `CLIENT_SECRET` must match on both sides. The frontend exchanges it for a JWT on the first request; the JWT is cached for 55 minutes.

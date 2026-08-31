@@ -80,12 +80,53 @@ score numbers/rings, active nav state, focus rings, links. Everything
 else is white-alpha, text tokens, or semantic green/amber/red. If a
 surface "needs color", it gets glass + light, not violet.
 
+## CSS cascade rules (hard rule — this one has bitten us)
+
+**Every element-level default in `app/globals.css` MUST live inside
+`@layer base { }`.** Tailwind v4 emits `@layer theme, base, components,
+utilities` and puts all of its utilities in `@layer utilities`. Per the
+cascade-layer spec, **unlayered declarations beat every layered
+declaration regardless of specificity** — so an unlayered `p { color }`
+silently defeats `text-secondary`, `text-zinc-700`, and every other text
+colour utility in the app.
+
+This shipped as a P0: unlayered `h1..h6 { color }` and `p { color }`
+overrode the light-paper resume preview
+(`components/ResumeTemplatePreview.tsx`, which is `bg-white`), rendering
+`#f4f5f9` on `#ffffff` — a **1.09:1** contrast ratio. The candidate's
+name, every section heading, the summary, all dates and the education
+block were invisible; only classed `<span>`/`<li>` survived. It went
+unnoticed on the dark pages because there it merely flattened hierarchy.
+
+Verify with the computed value, not by eye:
+
+```js
+getComputedStyle(document.querySelector('.bg-white h1')).color
+// must be the utility's colour, not var(--text-primary)
+```
+
+Related: **two plain classes that set the same property silently
+clobber each other.** `.glow-accent` and `.shadow-paper-lg` both set
+`box-shadow` at equal specificity, so an element with both got only the
+later one. They now compose through `--elev-shadow` / `--glow-shadow`,
+declared with `@property { inherits: false }` (without that, a
+`.shadow-paper-lg` card leaks its elevation into every descendant
+carrying `.glow-accent`). Add a new elevation/glow class the same way.
+
+**Anything that renders on a light surface needs checking on both.**
+`ResumeTemplatePreview` is the only light-surface component in the app
+and sits deliberately outside Aurora Glass; `::selection` also carries no
+`color` for this reason. Dark app chrome floating over that card (sticky
+action bars, the sticky navbar) needs its own scrim — `bg-card` is 4%
+white and vanishes on paper.
+
 ## Component rules
 
 - Cards/panels/nav/dropzone/FAQ = glass. Radius: `rounded-2xl` cards,
   `rounded-lg` buttons/inputs.
 - Elevation classes `.shadow-paper-sm/md/lg` (legacy names) = dark
-  ambient shadow + inner highlight scale.
+  ambient shadow + inner highlight scale. See the cascade rules above
+  before editing them.
 - Icons: lucide-react SVGs only, no emoji.
 - Focus: `focus-visible:ring-2 ring-accent` + offset on base.
 - Touch targets ≥44px; breakpoints 375/768/1024/1440.

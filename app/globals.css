@@ -124,24 +124,32 @@
   }
 }
 
-html {
-  color-scheme: dark;
-}
+/* These element defaults MUST stay inside @layer base. Unlayered rules beat
+   every layered one regardless of specificity, and Tailwind v4 emits all of
+   its utilities into @layer utilities — so an unlayered `p { color }` here
+   silently defeats `text-zinc-700`, `text-secondary`, and every other text
+   colour utility in the app. That's what made the light-paper resume preview
+   (components/ResumeTemplatePreview.tsx) render near-white text on white. */
+@layer base {
+  html {
+    color-scheme: dark;
+  }
 
-body {
-  background: var(--bg-base);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-primary);
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
-}
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
 
-p {
-  color: var(--text-primary);
+  p {
+    color: var(--text-primary);
+  }
 }
 
 /* ── Glass surfaces ───────────────────────────────────────────── */
@@ -272,26 +280,53 @@ p {
   font-weight: 700;
 }
 
-/* Elevation scale (legacy names kept — components reference these). */
+/* Elevation scale (legacy names kept — components reference these).
+   Elevation and glow are composed through two custom properties rather than
+   each setting `box-shadow` outright: they're equal-specificity plain classes,
+   so a direct `box-shadow` in both means whichever is declared last silently
+   wins and the other contributes nothing (`glow-accent shadow-paper-lg` on one
+   element used to render the glow with no elevation). Each class now sets only
+   its own slot, so any combination composes. */
+/* inherits: false is load-bearing — custom properties inherit by default, so
+   without this a .shadow-paper-lg card would leak its elevation into every
+   descendant carrying .glow-accent. */
+@property --elev-shadow {
+  syntax: "*";
+  inherits: false;
+}
+@property --glow-shadow {
+  syntax: "*";
+  inherits: false;
+}
+
+.shadow-paper-sm,
+.shadow-paper-md,
+.shadow-paper-lg,
+.glow-accent {
+  box-shadow: var(--elev-shadow, 0 0 #0000), var(--glow-shadow, 0 0 #0000);
+}
 .shadow-paper-sm {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --elev-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .shadow-paper-md {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --elev-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .shadow-paper-lg {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --elev-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 /* Accent glow for primary CTAs only. */
 .glow-accent {
-  box-shadow: 0 0 24px var(--accent-glow);
+  --glow-shadow: 0 0 24px var(--accent-glow);
 }
 
 /* Selection + scrollbars. */
+/* No `color` here on purpose: pinning it to --text-primary (near-white) made
+   selected text unreadable on the light-paper resume preview — which is the
+   one surface users actually select text on, to proofread. Letting the text
+   keep its own colour reads correctly on both dark and light surfaces. */
 ::selection {
   background: rgba(139, 92, 246, 0.4);
-  color: var(--text-primary);
 }
 * {
   scrollbar-width: thin;
